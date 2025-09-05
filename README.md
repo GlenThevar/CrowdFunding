@@ -30,6 +30,4 @@ Then to run frontend and the backend go into the indivisual folder and type
 npm run dev
 ```
 
-then to run the frontend run npm run dev
 
-Then to run the backend run npm run dev
