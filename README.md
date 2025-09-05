@@ -7,7 +7,7 @@ This repository contains the CrowdFunding project with separate `frontend` and `
 ## Getting Started
 
 ```
-https://github.com/GlenThevar/CrowdFunding.git
+git clone https://github.com/GlenThevar/CrowdFunding.git
 ```
 
 Then go in the frontend folder and install the dependency
