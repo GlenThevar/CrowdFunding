@@ -41,6 +41,6 @@ Once you have made your changes in your own branch and are ready to commit
 git push origin <new branch name>
 ```
 
-Then once you have succesfully pushed the changes you can create a pull request using the github repo
+Then once you have succesfully pushed the changes you can create a pull request using the github repository
 
 
