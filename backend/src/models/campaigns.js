@@ -7,6 +7,11 @@ const CampaignSchema=new mongoose.Schema(
             type:String,
             required:true,
         },
+        content: {
+            type: String,
+            required: true, 
+        },
+
     },
 );
 const campaigns=mongoose.model("campaigns",CampaignSchema)

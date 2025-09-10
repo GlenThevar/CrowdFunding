@@ -4,21 +4,30 @@ import dotenv from "dotenv";
 import CampaignRoutes from "./routes/CampaignRoutes.js";
 dotenv.config();
 const app = express();
-const port = process.env.port|| 3000;
+const port = process.env.PORT|| 3000;
 
-
+app.use(express.json());
 connectDB()
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {x
   res.send('Hello Mardav')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
 })
 
 app.get('/about',(req,res)=>{
   res.status(200).send("Checking ");
+
 })
+app.use("/api/campaign", CampaignRoutes);
+
+
+connectDB().then(() => {
+
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}).catch(error => {
+    console.error("Failed to connect to database. Server not started.", error);
+    process.exit(1);
+});
 
 
