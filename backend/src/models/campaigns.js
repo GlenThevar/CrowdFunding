@@ -11,7 +11,14 @@ const CampaignSchema=new mongoose.Schema(
             type: String,
             required: true, 
         },
-
+        goalAmount: {
+            type: Number,
+            required:true,
+        },
+        currentAmount: {
+            type:Number,
+            default:0,
+        },
     },
 );
 const campaigns=mongoose.model("campaigns",CampaignSchema)
