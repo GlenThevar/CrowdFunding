@@ -48,7 +48,7 @@ export async function UpdateCampaign(req,res){
         if(!updateCampaign){
             return res.status(404).json({message:"Campaign not found"});
         }
-        req.status(200).json(updateCampaign);
+        res.status(200).json(updateCampaign);
     } catch (error) {
         console.error("Error in updating Campaign",error);
         res.status(500).json({message:"Internal Server Error"});
