@@ -21,5 +21,4 @@ const CampaignSchema=new mongoose.Schema(
         },
     },
 );
-const campaigns=mongoose.model("campaigns",CampaignSchema)
-export default campaigns;
+export const campaigns=mongoose.model("campaigns",CampaignSchema)

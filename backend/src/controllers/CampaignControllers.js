@@ -1,4 +1,4 @@
-import campaigns from "../models/campaigns.js";
+import {campaigns} from "../models/campaigns.js";
 // const campaigns = require('../models/campaigns.js');
 
 export async function createCampaign(req,res) {
