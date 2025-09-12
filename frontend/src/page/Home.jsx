@@ -1,7 +1,15 @@
 import React from "react";
 
+import SignLogInButtons from "../components/component/buttons/SignLogInButtons";
+
 const Home = () => {
-  return <div>Home</div>;
+
+  console.log( import.meta.env.VITE_FRONTEND_URL);
+  return (
+    <div>
+      <SignLogInButtons />
+    </div>
+  );
 };
 
 export default Home;
