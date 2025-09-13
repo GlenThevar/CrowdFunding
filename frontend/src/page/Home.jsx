@@ -1,6 +1,6 @@
 import React from "react";
 
-import SignLogInButtons from "../components/component/buttons/SignLogInButtons";
+import SignLogInButtons from "../components/Buttons/buttons/SignLogInButtons";
 
 const Home = () => {
 

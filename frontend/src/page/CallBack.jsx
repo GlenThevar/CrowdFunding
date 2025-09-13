@@ -1,7 +1,7 @@
 import React from "react";
 
 const CallbackPage = () => {
-  return <div>Hello World</div>;
+  return <div>This is the callback page</div>;
 };
 
 export default CallbackPage;
