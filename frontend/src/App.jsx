@@ -11,7 +11,6 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/callback" element={<CallbackPage />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </>
