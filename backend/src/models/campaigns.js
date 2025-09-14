@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
-// Create a Schema
-// Model Based Off of that schema
+
 const CampaignSchema = new mongoose.Schema({
   title: {
     type: String,
