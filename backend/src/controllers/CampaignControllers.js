@@ -1,10 +1,10 @@
-import {campaigns} from "../models/campaigns.js";
+import Campaign from "../models/campaigns.js";
 // const campaigns = require('../models/campaigns.js');
 
 export async function createCampaign(req,res) {
         try{
             const{title,content,goalAmount}=req.body
-            const campaign=new campaigns({title,content,goalAmount,currentAmount:0});
+            const campaign=new Campaign({title,content,goalAmount,currentAmount:0});
             const savedecampaign=await campaign.save();
             res.status(201).json(savedecampaign);
         }
@@ -16,7 +16,7 @@ export async function createCampaign(req,res) {
 };
 export async function AllCampaign(req,res) {
     try {
-        const allCampaign=await campaigns.find();
+        const allCampaign=await Campaign.find();
         res.status(200).json(allCampaign);
     } catch (error) {
         console.error("Error fetching campaigns:",error);
@@ -25,9 +25,9 @@ export async function AllCampaign(req,res) {
 };
 export async function SingleCampaign(req,res) {
     try{
-        const campaign=await campaigns.findById(req.params.id);
+        const campaign=await Campaign.findById(req.params.id);
         if(!campaign){
-            res.status(404).json({message:"Campaign not found"});
+            return res.status(404).json({message:"Campaign not found"});
         }
         res.status(200).json(campaign);
     }catch(error){
@@ -40,7 +40,7 @@ export async function SingleCampaign(req,res) {
 export async function UpdateCampaign(req,res){
     try {
         const{title,content,goalAmount}=req.body;
-        const updateCampaign=await campaigns.findByIdAndUpdate(
+        const updateCampaign=await Campaign.findByIdAndUpdate(
             req.params.id,
             {title,content,goalAmount},
             {new: true}
@@ -56,7 +56,7 @@ export async function UpdateCampaign(req,res){
 }
 export async function DeleteCampaign(req,res){
     try{
-        const deletecampaign=await campaigns.findByIdAndDelete(req.params.id);
+        const deletecampaign=await Campaign.findByIdAndDelete(req.params.id);
         if(!deletecampaign){
             return res.status(404).json({message:"Campaign not found"});
         }

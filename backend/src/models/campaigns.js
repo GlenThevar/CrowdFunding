@@ -19,6 +19,12 @@ const CampaignSchema=new mongoose.Schema(
             type:Number,
             default:0,
         },
+        amountRaised: {
+            type:Number,
+            default:0,
+        },
     },
 );
-export const campaigns=mongoose.model("campaigns",CampaignSchema)
+const Campaign = mongoose.model("Campaign", CampaignSchema);
+export { Campaign };
+export default Campaign;
