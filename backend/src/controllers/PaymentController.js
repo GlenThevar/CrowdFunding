@@ -18,10 +18,7 @@ if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
 // Create RazorPay Order
 export async function CreateOrder(req,res) {
     try {
-        // console.log(`razorPay key: ${process.env.RAZORPAY_KEY_ID}, ${process.env.RAZORPAY_KEY_SECRET}`);
-        // console.log(`RazorPay: ${razorpay}`);
-        console.log("KEY_ID:", process.env.RAZORPAY_KEY_ID);
-        console.log("KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET);
+
         if (!razorpay) {
             return res.status(500).json({message:"Razorpay not configured. Please set environment variables."});
         }
@@ -54,7 +51,7 @@ export async function verifyPayment(req,res) {
         
         const{razorpayOrderId,razorpayPaymentId,razorpaySignature,campaignId}=req.body;
         
-        // CORRECTED: Use the exact secret variable name from your .env file
+        
         const expectedSignature=crypto
         .createHmac("sha256",process.env.RAZORPAY_KEY_SECRET)
         .update(razorpayOrderId + "|"+ razorpayPaymentId)
