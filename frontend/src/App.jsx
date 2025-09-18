@@ -1,18 +1,20 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 
-import Auth from "./page/Auth";
+import LandingPage from "./page/LandingPage";
 import Home from "./page/Home";
-import CallbackPage from "./page/CallBack";
 import NotFound from "./page/NotFound";
 
 const App = () => {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/*" element={<NotFound />} />
-      </Routes>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<LandingPage />} />
+          <Route path="/*" element={<NotFound />} />
+        </Routes>
+      </Router>
     </>
   );
 };

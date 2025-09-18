@@ -1,11 +1,10 @@
 import React from "react";
-
-import SignLogInButtons from "../components/Buttons/buttons/SignLogInButtons";
+import ButtonAuth from "../components/pageComponents/ButtonAuth";
 
 const Home = () => {
   return (
     <div>
-      <SignLogInButtons />
+      <ButtonAuth />
     </div>
   );
 };

@@ -1,7 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sofia+Sans+Condensed:ital,wght@0,1..1000;1,1..1000&family=VT323&display=swap");
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: black;
+}
 
 @theme {
   --font-auth: "ThinkLoved", sans-serif;
+  --font-rubik: "Rubik", sans-serif;
+  --font-anton: "Anton", sans-serif;
+  --font-sofia: "Sofia Sans Condensed", sans-serif;
+  --font-vt: "VT323", monospace;
 }
 
 @font-face {
