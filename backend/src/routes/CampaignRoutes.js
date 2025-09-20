@@ -15,10 +15,14 @@ export const router = express.Router();
 
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  passport.authenticate(["jwt"], { session: false }),
   createCampaign
 );
-router.get("/", passport.authenticate("jwt", { session: false }), AllCampaign);
+router.get(
+  "/",
+  passport.authenticate(["jwt"], { session: false }),
+  AllCampaign
+);
 router.get(
   "/:id",
   passport.authenticate("jwt", { session: false }),

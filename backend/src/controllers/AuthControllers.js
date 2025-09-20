@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
 
 import { users } from "../models/user.js";
+
+dotenv.config();
 
 export const registerController = async (req, res) => {
   try {
@@ -36,12 +39,11 @@ export const loginController = async (req, res) => {
 
     const accessToken = jwt.sign(
       { id: userExist._id, username: username },
-      "cc1adffae3677622fce019651a67dc4f",
+      process.env.jwt_secret_key,
       {
         expiresIn: "1d",
       }
     );
-
     return res
       .status(200)
       .json({ message: "user logged in", accessToken: accessToken });
