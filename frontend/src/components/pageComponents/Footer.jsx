@@ -21,7 +21,9 @@ const Footer = () => {
           </p>
         </div>
         <div className="flex justify-center items-center gap-2">
-          <span className="font-ma text-sm">Taken inspiration from </span>{" "}
+          <span className="font-ma text-sm md:text-lg">
+            Taken inspiration from{" "}
+          </span>{" "}
           <a href="https://www.kickstarter.com/" target="_blank">
             <img src={logo} className="w-5 h-5" />{" "}
           </a>

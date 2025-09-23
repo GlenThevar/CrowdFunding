@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Origami, Menu } from "lucide-react";
+import { Origami, Menu, Plus } from "lucide-react";
 
 import Avatar from "./Avatar";
 import ThemeController from "./ThemeController";
@@ -26,7 +26,7 @@ const NavbarHome = () => {
         </div>
         <div className="flex justify-center items-center gap-4 order-2 md:order-3">
           <ThemeController />
-          <Menu className="w-6 h-6 sm:h-7 sm:w-7" />
+          <Menu className="w-8 h-8 sm:h-10 sm:w-10 cursor-pointer" />
           <Avatar />
         </div>
       </div>

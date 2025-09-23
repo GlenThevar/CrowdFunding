@@ -9,7 +9,7 @@ const BleedCarousel = () => {
 
   return (
     <div
-      className={`carousel carousel-cente max-w-md space-x-4 p-4 ${
+      className={`carousel carousel-cente space-x-4 p-4 ${
         theme == "black" ? "bg-white" : "bg-neutral"
       }  `}
     >

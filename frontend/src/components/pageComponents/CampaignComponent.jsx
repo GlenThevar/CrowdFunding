@@ -12,7 +12,7 @@ const CampaignComponent = () => {
 
   return (
     <div
-      className={`card border-base-300 bg-base-100 w-110 shadow-sm rounded-sm ${
+      className={`card border-base-300 bg-base-100 w-auto shadow-sm rounded-sm ${
         theme == "black" ? "border-2" : "border-1"
       }`}
     >
