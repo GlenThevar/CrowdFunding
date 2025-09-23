@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router";
 
 import LandingPage from "./page/LandingPage";
 import Home from "./page/Home";
-import NotFound from "./page/NotFound";
 import Layout from "./page/Layout";
 import { AppContext } from "./context/AppContext";
 

@@ -1,13 +1,15 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 import NavbarHome from "../components/pageComponents/NavbarHome";
-import SidebarHome from "../components/pageComponents/SidebarHome";
+import Footer from "../components/pageComponents/Footer";
 
-const Layout = ({ children }) => {
+const Layout = () => {
   return (
     <div>
       <NavbarHome />
-      {children}
+      <Outlet />
+      <Footer />
     </div>
   );
 };

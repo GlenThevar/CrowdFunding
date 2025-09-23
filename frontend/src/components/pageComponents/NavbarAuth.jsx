@@ -16,6 +16,9 @@ const NavbarAuth = () => {
             FUND IT
           </p>
         </div>
+        <div>
+          <input type="search" />
+        </div>
         <div className="flex items-center gap-3 mt-4">
           <button className="btn btn-outline btn-primary font-sofia font-light bg-base-300 text-white rounded-md  hover:text-black hover:bg-white w-18 h-8 p-1 sm:w-25 sm:h-12 sm:text-lg">
             <p>SIGN UP</p>{" "}

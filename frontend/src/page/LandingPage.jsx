@@ -1,4 +1,5 @@
 import React from "react";
+
 import NavbarAuth from "../components/pageComponents/NavbarAuth";
 import HomeAuth from "../components/pageComponents/HomeAuth";
 

@@ -6,7 +6,7 @@ const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState("black");
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme == "black" ? "lofi" : "black"));
+    setTheme((prevTheme) => (prevTheme == "black" ? "lemonade" : "black"));
   };
 
   return (

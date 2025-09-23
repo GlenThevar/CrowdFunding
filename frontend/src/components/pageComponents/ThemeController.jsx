@@ -1,13 +1,9 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
 import { AppContext } from "../../context/AppContext";
 
 const ThemeController = () => {
-  const { theme, toggleTheme } = useContext(AppContext);
-
-  useEffect(() => {
-    console.log(theme);
-  }, [theme]);
+  const { toggleTheme } = useContext(AppContext);
 
   return (
     <label className="swap swap-rotate scale-85 sm:scale-100">
