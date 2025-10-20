@@ -11,7 +11,7 @@ const IndivisualAuthorComment = () => {
         theme == "black"
           ? "border-2 border-base-300"
           : "border-1 border-base-200"
-      } ml-10 border-l-4 border-l-green-600 shadow-md`}
+      } ml-10 border-l-4 border-l-green-900 shadow-md`}
     >
       <div className="flex gap-4 items-center">
         <div

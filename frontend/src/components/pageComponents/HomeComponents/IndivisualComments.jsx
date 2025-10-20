@@ -29,7 +29,7 @@ const IndivisualComments = () => {
                 className={`btn btn-outline btn-primary rounded-sm ${
                   theme == "black"
                     ? "text-white hover:text-black hover:bg-white"
-                    : "text-black bg-base-100 hover:bg-base-200"
+                    : "text-black bg-base-100 hover:bg-green-900 hover:text-white border-0"
                 } shadow-sm flex gap-2 items-center justify-center w-fit`}
               >
                 <SendHorizonal
@@ -39,19 +39,7 @@ const IndivisualComments = () => {
               </button>
             </div>
           </div>
-          {/* <div className="flex justify-end">
-              <button
-                className={`btn btn-outline btn-primary rounded-sm  ${
-                  theme == "black"
-                    ? "text-white hover:text-black hover:bg-white"
-                    : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
-                } shadow-sm flex gap-2 items-center justify-center w-fit`}
-              >
-                <p className="font-heading">Message</p>
-              </button>
-            </div> */}
         </div>
-
         <div className="flex flex-col gap-8">
           <IndivisualBackerComment />
           <IndivisualBackerComment />

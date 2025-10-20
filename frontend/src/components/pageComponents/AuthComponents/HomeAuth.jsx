@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 
 const HomeAuth = () => {
   return (
-    <div>
-      <div className="w-[100vw] h-[100vh] text-center mt-[20vh] md:mt-[10vh]">
-        <p className="text-white font-sofia font-black text-7xl my-2 sm:text-9xl md:text-[23vh]">
-          JOIN THE
-        </p>
-        <p className="text-white font-sofia font-black text-7xl my-2 sm:text-9xl md:text-[23vh]">
-          NEW ERA OF
-        </p>
-        <p className="text-white font-sofia font-black text-7xl my-2 sm:text-9xl md:text-[23vh]">
-          FUNDING
-        </p>
+    <div className="w-full h-full">
+      <div className="flex flex-col w-full h-full items-center font-heading font-black text-5xl mt-30  sm:text-7xl  sm:mt-25 md:text-8xl  md:mt-25 lg:text-[140px] lg:leading-35 lg:mt-20 xl:mt-10 xl:text-[190px] xl:leading-45">
+        <div>
+          <p>JOIN THE</p>
+        </div>
+        <div>
+          <p>NEW ERA OF</p>
+        </div>
+        <div>
+          <p>FUNDING</p>
+        </div>
       </div>
     </div>
   );

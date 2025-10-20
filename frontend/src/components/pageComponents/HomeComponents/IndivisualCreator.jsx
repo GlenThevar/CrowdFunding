@@ -81,7 +81,7 @@ const IndivisualCreator = () => {
           className={`btn btn-outline btn-primary py-2 px-3 sm:py-6 sm:px-10 rounded-sm   ${
             theme == "black"
               ? "text-white hover:text-black hover:bg-white"
-              : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+              : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
           } shadow-sm flex gap-2 items-center justify-center`}
         >
           <Mail strokeWidth={1} className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -91,7 +91,7 @@ const IndivisualCreator = () => {
           className={`btn btn-outline btn-primary font-m py-2 px-3 sm:py-6 sm:px-10 rounded-sm   ${
             theme == "black"
               ? "text-white hover:text-black hover:bg-white"
-              : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+              : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
           } shadow-sm flex gap-2 items-center justify-center`}
           onClick={FollowUser}
         >

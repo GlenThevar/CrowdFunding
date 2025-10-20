@@ -58,7 +58,7 @@ const CreateCampaignPage = () => {
 
   return (
     <div
-      className={`min-h-[100vh] mt-5 mx-10 shadow-lg ${
+      className={`min-h-[100vh] shadow-lg ${
         theme == "black"
           ? "border-2 border-base-300"
           : "border-1 border-base-200"
@@ -159,21 +159,21 @@ const CreateCampaignPage = () => {
                 className: `font-heading text-xs md:text-sm gap-1 p-1 md:p-2 rounded-sm ${
                   theme == "black"
                     ? "border-2 border-base-300 hover:bg-white hover:text-black"
-                    : "border-1 border-base-200 hover:bg-black hover:text-white"
+                    : "border-1 border-base-200 hover:bg-green-900 hover:text-white"
                 }`,
               }}
               uploadOptions={{
                 className: `font-heading text-xs md:text-sm gap-1 p-1 md:p-2 rounded-sm ${
                   theme == "black"
                     ? "border-2 border-base-300 hover:bg-white hover:text-black"
-                    : "border-1 border-base-200 hover:bg-black hover:text-white"
+                    : "border-1 border-base-200 hover:bg-green-900 hover:text-white"
                 }`,
               }}
               cancelOptions={{
                 className: `font-heading text-xs md:text-sm gap-1 p-1 md:p-2 rounded-sm  ${
                   theme == "black"
                     ? "border-2 border-base-300 hover:bg-white hover:text-black"
-                    : "border-1 border-base-200 hover:bg-black hover:text-white"
+                    : "border-1 border-base-200 hover:bg-green-900 hover:text-white"
                 }`,
               }}
               pt={{
@@ -294,7 +294,7 @@ const CreateCampaignPage = () => {
                 className={`btn btn-outline btn-primary rounded-sm ${
                   theme == "black"
                     ? "text-white hover:text-black hover:bg-white"
-                    : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+                    : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
                 } shadow-sm flex gap-2 items-center justify-center`}
                 onClick={faqHandleAdd}
               >
@@ -306,7 +306,7 @@ const CreateCampaignPage = () => {
                 className={`btn btn-outline btn-primary rounded-sm ${
                   theme == "black"
                     ? "text-white hover:text-black hover:bg-white"
-                    : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+                    : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
                 } shadow-sm flex gap-2 items-center justify-center`}
                 onClick={faqHandleDelete}
               >
@@ -335,7 +335,7 @@ const CreateCampaignPage = () => {
               className={`btn btn-outline btn-primary rounded-sm ${
                 theme == "black"
                   ? "text-white hover:text-black hover:bg-white"
-                  : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+                  : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
               } shadow-sm flex gap-2 items-center justify-center`}
               onClick={faqHandleAdd}
             >

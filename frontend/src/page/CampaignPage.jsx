@@ -5,7 +5,7 @@ import ViewCampaign from "../components/pageComponents/HomeComponents/Indivisual
 const CampaignPage = () => {
   return (
     <div className="min-h-[100vh]">
-      <div className="mt-10">
+      <div>
         <ViewCampaign />
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { MapPin, Calendar, PiggyBank } from "lucide-react";
+import { MapPin, Calendar, PiggyBank, MessageCircle } from "lucide-react";
 
 import { AppContext } from "../../../context/AppContext";
 
@@ -44,8 +44,10 @@ const ViewCampaign = () => {
                 {Campaigntags.map((data) => (
                   <button
                     key={data}
-                    className={`btn rounded-md hover:border-1 hover:border-base-300 font-heading text-xs sm:text-sm${
-                      theme == "black" ? "bg-base-300" : "bg-base-200"
+                    className={`btn rounded-md hover:border-1 hover:border-base-300 font-heading text-xs sm:text-sm ${
+                      theme == "black"
+                        ? "bg-base-300"
+                        : "bg-green-900 text-white"
                     }`}
                   >
                     {data}
@@ -101,12 +103,27 @@ const ViewCampaign = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center md:justify-start gap-3 mt-5">
+          <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 mt-5">
+            <button
+              className={`btn btn-outline btn-primary py-2 px-3 sm:py-6 sm:px-6 rounded-sm   ${
+                theme == "black"
+                  ? "text-white hover:text-black hover:bg-white"
+                  : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
+              } shadow-sm flex gap-2 items-center justify-center`}
+            >
+              <MessageCircle
+                strokeWidth={1}
+                className="w-4 h-4 sm:w-6 sm:h-6"
+              />
+              <p className="font-heading text-xs sm:text-sm font-light">
+                Message
+              </p>
+            </button>
             <button
               className={`btn btn-outline btn-primary py-2 px-3 sm:py-6 sm:px-10 rounded-sm   ${
                 theme == "black"
                   ? "text-white hover:text-black hover:bg-white"
-                  : "text-black  bg-base-100 border-base-300 hover:bg-base-200"
+                  : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
               } shadow-sm flex gap-2 items-center justify-center`}
             >
               <PiggyBank strokeWidth={1} className="w-4 h-4 sm:w-6 sm:h-6" />

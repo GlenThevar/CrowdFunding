@@ -8,7 +8,7 @@ import { Clock } from "lucide-react";
 import { AppContext } from "../../../context/AppContext";
 import Campaigntags from "../../../data/campaignTags";
 
-const CampaignComponent = () => {
+const CampaignComponent = ({ ht }) => {
   const { theme } = useContext(AppContext);
 
   return (
@@ -19,7 +19,7 @@ const CampaignComponent = () => {
         }`}
       >
         <figure className="p-3">
-          <BleedCarousel height={"h-[250px]"} />
+          <BleedCarousel height={!ht && "h-[150px]"} />
         </figure>
         <div className="card-body">
           <div>
@@ -47,7 +47,9 @@ const CampaignComponent = () => {
                     <button
                       key={data}
                       className={`btn rounded-md hover:border-1 hover:border-base-300 font-m ${
-                        theme == "black" ? "bg-base-300" : "bg-base-200"
+                        theme == "black"
+                          ? "bg-base-300"
+                          : "bg-green-900 text-white"
                       }`}
                     >
                       {data}
