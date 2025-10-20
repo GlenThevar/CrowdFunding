@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Origami, Mail, User, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Google } from "../../../data/icons/google";
 
 const SignupAuth = () => {
+  const [nameEmail, setNameEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const nameEmailChange = (e) => {
+    setNameEmail(e.target.value);
+  };
+  const passwordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const submitForm = () => {
+    
+  };
+
   return (
     <div className="flex w-full h-full justify-center">
       <div className="w-[300px] sm:w-[400px] md:w-[500px] bg-base-200 my-10 border-2 border-base-300 flex flex-col p-5 gap-10 h-fit">
@@ -35,6 +49,8 @@ const SignupAuth = () => {
          [&::-webkit-search-decoration]:appearance-none 
          [&::-webkit-search-results-button]:appearance-none 
          [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
+              onChange={nameEmailChange}
+              value={nameEmail}
             />
           </div>
 
@@ -48,10 +64,15 @@ const SignupAuth = () => {
          [&::-webkit-search-decoration]:appearance-none 
          [&::-webkit-search-results-button]:appearance-none 
          [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
+              value={password}
+              onChange={passwordChange}
             />
           </div>
 
-          <button className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full">
+          <button
+            onClick={submitForm}
+            className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
+          >
             <p>SIGN UP</p>
           </button>
         </div>

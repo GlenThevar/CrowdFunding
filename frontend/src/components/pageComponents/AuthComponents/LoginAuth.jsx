@@ -6,6 +6,9 @@ import { Google } from "../../../data/icons/google";
 
 const LoginAuth = () => {
   const [signIn, toggle] = useState(true);
+
+  
+
   return (
     <div className="flex w-full h-full justify-center">
       <div className="w-[300px] sm:w-[400px] md:w-[500px] h-fit bg-base-200 my-10 border-2 border-base-300 flex flex-col p-5 gap-6 ">
@@ -77,7 +80,6 @@ const LoginAuth = () => {
             <Google className="w-5 h-5" />
           </button>
         </div>
-        <div></div>
       </div>
     </div>
   );
