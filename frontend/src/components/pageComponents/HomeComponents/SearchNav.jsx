@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Search } from "lucide-react";
 import { useContext } from "react";
 
-import { AppContext } from "../../context/AppContext";
+import { AppContext } from "../../../context/AppContext";
 
 const SearchNav = () => {
   const { theme } = useContext(AppContext);
+
+  const [search, setSearch] = useState("");
+
+  const HandleInput = (e) => {
+    setSearch(e.target.value);
+  };
 
   return (
     <div>
@@ -23,6 +29,8 @@ const SearchNav = () => {
          [&::-webkit-search-results-button]:appearance-none 
          [&::-webkit-search-results-decoration]:appearance-none w-full md:w-[40vw] lg:w-[50vw]"
           placeholder="Search for a specific campaign..."
+          value={search}
+          onChange={HandleInput}
         />
       </div>
     </div>

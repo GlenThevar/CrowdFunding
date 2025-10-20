@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 
-import { AppContext } from "../../context/AppContext";
+import { AppContext } from "../../../context/AppContext";
 
 const ThemeController = () => {
   const { toggleTheme } = useContext(AppContext);
 
   return (
-    <label className="swap swap-rotate scale-85 sm:scale-100">
+    <label className="swap swap-rotate scale-85 sm:scale-120">
       <input
         type="checkbox"
         className="theme-controller"

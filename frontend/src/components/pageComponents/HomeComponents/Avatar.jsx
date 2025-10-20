@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { CircleUser, Users } from "lucide-react";
 
-import { AppContext } from "../../context/AppContext";
+import { AppContext } from "../../../context/AppContext";
 
 const Avatar = () => {
   const { theme } = useContext(AppContext);

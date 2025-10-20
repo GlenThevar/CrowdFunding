@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 
-import LandingPage from "./page/LandingPage";
-import Home from "./page/Home";
+import LandingPage from "./page/AuthPage";
+import Home from "./page/HomePage";
 import Layout from "./page/Layout";
 import { AppContext } from "./context/AppContext";
-import Individual from "./page/Individual";
+import CampaignPage from "./page/CampaignPage";
+import CreateCampaignPage from "./page/CreateCampaignPage";
+import Chat from "./page/ChatPage";
 
 const App = () => {
   const { theme } = useContext(AppContext);
@@ -16,7 +18,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="campaign" element={<Individual />} />
+            <Route path="campaign" element={<CampaignPage />} />
+            <Route path="create" element={<CreateCampaignPage />} />
+            <Route path="chat" element={<Chat />} />
+            <Route path="chat/:username" element={<Chat />} />
           </Route>
           <Route path="/auth" element={<LandingPage />} />
         </Routes>

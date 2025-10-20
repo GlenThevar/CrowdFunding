@@ -1,7 +1,7 @@
 import React from "react";
 
-import NavbarAuth from "../components/pageComponents/NavbarAuth";
-import HomeAuth from "../components/pageComponents/HomeAuth";
+import NavbarAuth from "../components/pageComponents/AuthComponents/NavbarAuth";
+import HomeAuth from "../components/pageComponents/AuthComponents/HomeAuth";
 
 const LandingPage = () => {
   return (

@@ -1,7 +1,6 @@
 import React from "react";
-import { Plus } from "lucide-react";
 
-import CampaignComponent from "../components/pageComponents/CampaignComponent";
+import CampaignComponent from "../components/pageComponents/HomeComponents/CampaignComponent";
 
 const Home = () => {
   return (

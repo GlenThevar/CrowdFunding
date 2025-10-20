@@ -3,7 +3,7 @@ import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
 import "@splidejs/react-splide/css";
 
-import tags from "../../data/navbartags";
+import tags from "../../../data/navbartags";
 
 const Slider = () => {
   return (
@@ -27,7 +27,7 @@ const Slider = () => {
         <SplideTrack>
           {tags.map((data) => (
             <SplideSlide key={data}>
-              <p className="font-vt cursor-pointer hover:underline text-xl">
+              <p className="font-heading font-bold text-sm cursor-pointer hover:underline">
                 {data}
               </p>
             </SplideSlide>

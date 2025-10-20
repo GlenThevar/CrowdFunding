@@ -1,7 +1,7 @@
 import React from "react";
 import { Origami, Send, Plus } from "lucide-react";
 
-import ButtonAuth from "./ButtonAuth";
+import ButtonAuth from "../HomeComponents/ButtonAuth";
 
 const NavbarAuth = () => {
   return (
@@ -9,8 +9,9 @@ const NavbarAuth = () => {
       <div className="flex justify-between items-center">
         <div className="flex gap-2 sm:gap-3 justify-center items-center mt-4">
           <Origami
-            strokeWidth={1}
+            strokeWidth={2}
             className="ml-3 sm:ml-5 m-0 w-7 h-7 sm:w-12 sm:h-12"
+            color="#FFF085"
           />
           <p className="text-white font-sofia text-2xl font-black sm:text-4xl ">
             FUND IT
