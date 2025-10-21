@@ -1,11 +1,1 @@
 @import "tailwindcss";
-
-@theme {
-  --font-auth: "ThinkLoved", sans-serif;
-}
-
-@font-face {
-  font-family: ThinkLoved;
-  src: url("./font/ThinkLoved.woff2") format("woff2");
-}
-

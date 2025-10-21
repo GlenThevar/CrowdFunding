@@ -1,18 +1,4 @@
 import express from "express";
-<<<<<<< HEAD
-
-import { createCampaign,DeleteCampaign,AllCampaign,SingleCampaign,UpdateCampaign } from "../controllers/CampaignControllers.js";
-
-const router = express.Router();
-
-router.post("/",createCampaign);
-router.get("/",AllCampaign);
-router.get("/:id",SingleCampaign);
-router.patch("/:id",UpdateCampaign);
-router.delete("/:id",DeleteCampaign);
-
-export default router;
-=======
 import passport from "passport";
 
 import "../auth/passport.js";
@@ -52,4 +38,3 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   DeleteCampaign
 );
->>>>>>> AuthBackEnd
