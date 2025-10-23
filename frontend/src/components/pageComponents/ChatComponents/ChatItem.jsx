@@ -19,7 +19,7 @@ const ChatItem = ({ name, profilePhoto, lastText, date }) => {
             }`}
           >
             <img
-              src="https://img.daisyui.com/images/profile/demo/batperson@192.webp"
+              src={profilePhoto}
               className={`rounded-full w-12 hover:cursor-pointer `}
             />
           </div>

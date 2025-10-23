@@ -27,18 +27,18 @@ const CampaignComponent = ({ ht }) => {
               <Avatar />
 
               <div className="flex flex-col gap-2 ">
-                <p className="text-2xl font-heading font-extrabold">
+                <p className="text-lg font-heading font-extrabold">
                   The Art of Derek Domnic Dsouza
                 </p>
-                <div className="flex gap-2 font-ma items-center">
+                <div className="flex gap-2 items-center">
                   <Clock strokeWidth={1} className="w-6 h-6" />
-                  <p className="font-heading font-light text-sm">
+                  <p className="font-heading font-light text-xs">
                     <span>12 July 2025</span>
                     <span className="mx-3">|</span>
                     <span>150% Funded</span>
                   </p>
                 </div>
-                <p className="font-subheading text-base font-light">
+                <p className="font-subheading text-sm font-light">
                   Take a behind-the-scenes look at this artist's favorite
                   pieces, creative journey, plus exclusive industry insights.
                 </p>
@@ -46,7 +46,7 @@ const CampaignComponent = ({ ht }) => {
                   {Campaigntags.map((data) => (
                     <button
                       key={data}
-                      className={`btn rounded-md hover:border-1 hover:border-base-300 font-m ${
+                      className={`btn rounded-md hover:border-1 hover:border-base-300 font-heading text-xs ${
                         theme == "black"
                           ? "bg-base-300"
                           : "bg-green-900 text-white"

@@ -10,7 +10,7 @@ dotenv.config();
 
 const jwtOpts = {
   jwtFromRequest: ExtractJwt.fromExtractors([
-    (req) => req.cookies?.accessToken,
+    (req) => req.cookies?.oauthToken,
     ExtractJwt.fromAuthHeaderAsBearerToken(),
   ]),
   secretOrKey: process.env.jwt_secret_key,

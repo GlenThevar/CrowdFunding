@@ -1,26 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { Origami, Mail, User, Lock } from "lucide-react";
+import { Origami, Mail, User, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom";
-
-import { Google } from "../../../data/icons/google";
+import axios from "axios";
+import { passwordStrength } from "check-password-strength";
+import isEmail from "validator/lib/isEmail";
+import toast, { Toaster } from "react-hot-toast";
 
 const SignupAuth = () => {
-  const [nameEmail, setNameEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [strength, setStrength] = useState("Too weak");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordChecker, setShowPasswordChecker] = useState(false);
+  const [passwordDeselected, setPasswordDeselected] = useState(false);
+  const [emailDeselected, setEmailDeselected] = useState(false);
 
-  const nameEmailChange = (e) => {
-    setNameEmail(e.target.value);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const usernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+  const emailChange = (e) => {
+    setEmail(e.target.value);
   };
   const passwordChange = (e) => {
     setPassword(e.target.value);
   };
 
-  const submitForm = () => {
-    
+  useEffect(() => {
+    if (passwordStrength(password).value == "Too weak") {
+      setStrength("Too weak");
+    } else if (passwordStrength(password).value == "Weak") {
+      setStrength("Weak");
+    } else if (passwordStrength(password).value == "Medium") {
+      setStrength("Medium");
+    } else {
+      setStrength("Strong");
+    }
+  }, [password]);
+
+  const submitForm = async () => {
+    if (
+      passwordStrength(password).value == "Too weak" ||
+      !isEmail(email) ||
+      username.length == 0
+    ) {
+      toast.error("Hmm... somethings wrong on your end");
+      return;
+    }
+    try {
+      const data = await axios.post(
+        "http://localhost:3000/auth/checkduplicate",
+        {
+          username,
+          email,
+        }
+      );
+
+      if (data.data.length > 0) {
+        toast.error("Hmm.. someone already exists with that username/email");
+        return;
+      }
+
+      setLoading(true);
+
+      const response = await axios.post("http://localhost:3000/auth/register", {
+        username,
+        email,
+        password,
+        lastLogin: new Date(),
+        accountCreated: new Date(),
+      });
+
+      setTimeout(() => {
+        toast.success("Perfect..now verify & log in");
+        setLoading(false);
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      toast.error("Hmm.. something went wrong on our end");
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex w-full h-full justify-center">
+    <div className="flex w-full h-full justify-center ">
+      <Toaster />
       <div className="w-[300px] sm:w-[400px] md:w-[500px] bg-base-200 my-10 border-2 border-base-300 flex flex-col p-5 gap-10 h-fit">
         <div className="flex flex-col w-full items-center gap-4">
           <div className="w-full flex justify-center">
@@ -39,54 +108,130 @@ const SignupAuth = () => {
           </div>
         </div>
         <div className="flex flex-col items-center w-full gap-4">
+          <div
+            className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full ${
+              emailDeselected
+                ? isEmail(email)
+                  ? ""
+                  : "border-1 border-error"
+                : ""
+            }`}
+          >
+            <Mail strokeWidth={1} />
+            <input
+              type="email"
+              placeholder="email"
+              className="w-full focus:outline-0  
+         [&::-webkit-search-cancel-button]:appearance-none 
+         [&::-webkit-search-decoration]:appearance-none 
+         [&::-webkit-search-results-button]:appearance-none 
+         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
+              onChange={emailChange}
+              value={email}
+              onBlur={() => setEmailDeselected(true)}
+            />
+          </div>
           <div className="flex bg-base-300 items-center rounded-md p-3 gap-3 w-full">
             <User strokeWidth={1} />
             <input
               type="text"
-              placeholder="username or email"
+              placeholder="username"
               className="w-full focus:outline-0  
-         [&::-webkit-search-cancel-button]:appearance-none 
-         [&::-webkit-search-decoration]:appearance-none 
-         [&::-webkit-search-results-button]:appearance-none 
-         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
-              onChange={nameEmailChange}
-              value={nameEmail}
+                   [&::-webkit-search-cancel-button]:appearance-none 
+                   [&::-webkit-search-decoration]:appearance-none 
+                   [&::-webkit-search-results-button]:appearance-none 
+                   [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
+              value={username}
+              onChange={usernameChange}
             />
           </div>
+          <div className="w-full flex flex-col gap-3">
+            <div
+              className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full ${
+                passwordDeselected
+                  ? strength == "Too weak"
+                    ? "border-1 border-error"
+                    : ""
+                  : ""
+              } `}
+            >
+              <Lock strokeWidth={1} />
 
-          <div className="flex bg-base-300 items-center rounded-md p-3 gap-3 w-full">
-            <Lock strokeWidth={1} />
-            <input
-              type="password"
-              placeholder="password"
-              className="w-full focus:outline-0  
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="password"
+                onSelect={() => setShowPasswordChecker(true)}
+                className="w-full focus:outline-0  
          [&::-webkit-search-cancel-button]:appearance-none 
          [&::-webkit-search-decoration]:appearance-none 
          [&::-webkit-search-results-button]:appearance-none 
-         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
-              value={password}
-              onChange={passwordChange}
-            />
+         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm "
+                value={password}
+                onChange={passwordChange}
+                onBlur={() => setPasswordDeselected(true)}
+              />
+              {showPassword ? (
+                <EyeOff strokeWidth={1} onClick={toggleShowPassword} />
+              ) : (
+                <Eye strokeWidth={1} onClick={toggleShowPassword} />
+              )}
+            </div>
+            <div
+              className={`w-full flex flex-col gap-1 ${
+                showPasswordChecker ? "" : "hidden"
+              }`}
+            >
+              <p className="text-xs font-heading font-light">
+                passsword strength is{" "}
+                <span
+                  className={`font-semibold text-red-400 ${
+                    strength == "Too weak"
+                      ? "text-error"
+                      : strength == "Weak"
+                      ? "text-error"
+                      : strength == "Medium"
+                      ? "text-warning"
+                      : "text-success"
+                  }`}
+                >
+                  {strength}
+                </span>
+              </p>
+              <progress
+                className={`progress progress-error ${
+                  strength == "Too weak"
+                    ? "progress-error"
+                    : strength == "Weak"
+                    ? "progress-error"
+                    : strength == "Medium"
+                    ? "progress-warning"
+                    : "progress-success"
+                } w-full`}
+                value={
+                  strength == "Too weak"
+                    ? "0"
+                    : strength == "Weak"
+                    ? "33"
+                    : strength == "Medium"
+                    ? "66"
+                    : "100"
+                }
+                max="100"
+              ></progress>
+            </div>
           </div>
 
           <button
             onClick={submitForm}
             className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
           >
-            <p>SIGN UP</p>
+            {loading ? (
+              <span className="loading loading-infinity loading-xl"></span>
+            ) : (
+              <p>SIGN UP</p>
+            )}
           </button>
         </div>
-        <div className="flex w-full">
-          <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
-          <div className="font-heading text-xs mx-2">OR</div>
-          <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
-        </div>
-        <div>
-          <button className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full">
-            <Google className="w-5 h-5" />
-          </button>
-        </div>
-        <div></div>
       </div>
     </div>
   );

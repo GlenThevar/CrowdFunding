@@ -1,5 +1,13 @@
 import React, { useContext } from "react";
-import { Origami, Menu, CirclePlus, MessageCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+  Origami,
+  Menu,
+  CirclePlus,
+  MessageCircle,
+  LogOut,
+  User,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 import Avatar from "./Avatar";
@@ -7,9 +15,18 @@ import ThemeController from "./ThemeController";
 import SearchNav from "./SearchNav";
 import Slider from "./Slider";
 import { AppContext } from "../../../context/AppContext";
+import { Button } from "primereact/button";
 
 const NavbarHome = () => {
-  const { theme } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { theme, userId } = useContext(AppContext);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/auth", {
+      replace: true,
+    });
+  };
 
   return (
     <div
@@ -58,11 +75,39 @@ const NavbarHome = () => {
               </li>
             </ul>
           </div>
-          <div className="w-9 sm:w-12 rounded-full hover:border-2 cursor-pointer">
-            <img
-              src="https://img.daisyui.com/images/profile/demo/batperson@192.webp"
-              className="rounded-full"
-            />
+          <div className="cursor-pointer dropdown dropdown-bottom dropdown-end">
+            <div
+              className="w-9 sm:w-12 rounded-full hover:border-2 cursor-pointer"
+              tabIndex={1}
+            >
+              <img
+                src="https://img.daisyui.com/images/profile/demo/batperson@192.webp"
+                className="rounded-full"
+              />
+            </div>
+            <ul
+              tabIndex={1}
+              className={`dropdown-content menu rounded-lg z-1 mt-2 w-40 lg:w-52 p-2 shadow-sm ${
+                theme == "black" ? "bg-base-300" : "bg-base-100"
+              }`}
+            >
+              <li>
+                <Link to={`/user/${userId}`}>
+                  <div className="flex justify-start gap-2 items-center rounded-lg">
+                    <User />
+                    <p className="font-heading">Profile</p>
+                  </div>
+                </Link>
+              </li>
+              <li>
+                <button onClick={logout}>
+                  <div className="flex justify-start gap-2 items-center rounded-lg">
+                    <LogOut />
+                    <p className="font-heading">Logout</p>
+                  </div>
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

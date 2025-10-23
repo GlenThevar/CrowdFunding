@@ -12,6 +12,9 @@ import HomeAuth from "./components/pageComponents/AuthComponents/HomeAuth";
 import AuthLayout from "./page/AuthLayout";
 import SignupAuth from "./components/pageComponents/AuthComponents/SignupAuth";
 import Test from "./components/pageComponents/HomeComponents/Test";
+import VerifyEmail from "./components/pageComponents/AuthComponents/VerifyEmail";
+import OauthScreen from "./components/pageComponents/AuthComponents/OauthScreen";
+import UserPage from "./page/UserPage";
 
 const App = () => {
   const { theme } = useContext(AppContext);
@@ -26,17 +29,20 @@ const App = () => {
             <Route path="campaign" element={<CampaignPage />} />
             <Route path="create" element={<CreateCampaignPage />} />
             <Route path="chat" element={<Chat />} />
-            <Route path="chat/:username" element={<Chat />} />
+            <Route path="chat/:id" element={<Chat />} />
+            <Route path="user/:id" element={<UserPage />} />
           </Route>
           <Route path="/auth" element={<AuthLayout />}>
             <Route index element={<HomeAuth />} />
             <Route path="login" element={<LoginAuth />} />
             <Route path="signup" element={<SignupAuth />} />
+            <Route path="verify" element={<VerifyEmail />} />
+            <Route path="oauthscreen" element={<OauthScreen />} />
           </Route>
         </Routes>
       </Router>
     </div>
   );
-}
+};
 
 export default App;

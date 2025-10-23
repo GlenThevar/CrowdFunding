@@ -7,12 +7,20 @@ import "../auth/passport.js";
 import {
   registerController,
   loginController,
+  checkDuplicateController,
+  verifyEmail,
+  checkAccessToken,
+  returnCookie,
 } from "../controllers/AuthControllers.js";
 
 export const router = express.Router();
 
 router.post("/register", registerController);
 router.post("/login", loginController);
+router.post("/checkduplicate", checkDuplicateController);
+router.post("/verifyemail", verifyEmail);
+router.post("/verifytoken", checkAccessToken);
+router.get("/returncookie", returnCookie);
 
 router.get("/logout", (req, res) => {
   res.clearCookie("accessToken");
@@ -41,10 +49,12 @@ router.get(
       }
     );
     return res
-      .cookie("accessToken", accessToken, {
+      .cookie("oauthToken", accessToken, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: false,
+        sameSite: "lax",
       })
-      .redirect("/campaigns");
+      .redirect("http://localhost:5175/");
   }
 );

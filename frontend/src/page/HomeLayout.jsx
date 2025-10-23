@@ -1,12 +1,67 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { AppContext } from "../context/AppContext";
 
 import NavbarHome from "../components/pageComponents/HomeComponents/NavbarHome";
 import Footer from "../components/pageComponents/HomeComponents/Footer";
 
 const HomeLayout = () => {
+  const { setUserId } = useContext(AppContext);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(false);
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (token) {
+      const checkToken = async () => {
+        try {
+          const result = await axios.post(
+            "http://localhost:3000/auth/verifytoken",
+            {
+              token,
+            }
+          );
+          setUserId(result.data.data.id);
+
+          if (result.status == 200) {
+            setUser(true);
+          } else {
+            setUser(false);
+          }
+        } catch (err) {
+          console.log(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      checkToken();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+    }
+  }, [token]);
+
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        {" "}
+        <span className="loading loading-infinity w-20 h-20"></span>
+        <p className="font-heading">Be patient, were loading</p>
+      </div>
+    );
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
   return (
     <div className="h-screen flex flex-col">
+      <Toaster />
       <div className="z-10 flex-shrink-0">
         <NavbarHome />
       </div>

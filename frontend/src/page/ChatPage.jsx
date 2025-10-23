@@ -9,7 +9,7 @@ import IndivisualChat from "../components/pageComponents/ChatComponents/Indivisu
 const Chat = () => {
   const { theme } = useContext(AppContext);
   const isLg = useMediaQuery({ query: "(min-width:1024px)" });
-  const { username } = useParams();
+  const { id } = useParams();
 
   return (
     <div className="flex justify-center">
@@ -21,7 +21,7 @@ const Chat = () => {
         } h-[65vh] overflow-hidden shadow-lg`}
       >
         {!isLg ? (
-          username ? (
+          id ? (
             <div className="flex-1 overflow-y-auto">
               <IndivisualChat />
             </div>
@@ -50,7 +50,7 @@ const Chat = () => {
 
         {isLg && (
           <div className="flex-2 overflow-y-auto">
-            {username ? (
+            {id ? (
               <IndivisualChat />
             ) : (
               <div className="flex justify-center items-center h-full w-full font-heading">

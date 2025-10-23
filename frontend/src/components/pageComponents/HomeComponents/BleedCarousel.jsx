@@ -7,8 +7,6 @@ import campaignImages from "../../../data/campaignImages";
 const BleedCarousel = ({ height }) => {
   const { theme } = useContext(AppContext);
 
-  console.log(height);
-
   return (
     <div
       className={`carousel carousel-cente space-x-4 p-4 ${
