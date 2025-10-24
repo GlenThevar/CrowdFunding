@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 
+function contentValidation(val) {
+  return val.text || val.image;
+}
+
 const messageSchema = new mongoose.Schema(
   {
     chat: {
@@ -13,8 +17,20 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
     content: {
-      type: String,
+      type: {
+        text: { type: String },
+        image: { type: String },
+      },
+      validate: [
+        contentValidation,
+        "Content must have at least text or an image",
+      ],
       required: true,
+      _id: false,
+    },
+    seen: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

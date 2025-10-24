@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { MapPin, Calendar, PiggyBank, MessageCircle } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -46,6 +46,7 @@ const ViewCampaign = () => {
   const [loadCount, setLoadCount] = useState(0);
   const [error, setError] = useState(null);
   const [option, setOption] = useState(1);
+  const [urlIsLoading, setUrlIsLoading] = useState(true);
 
   useEffect(() => {
     if (!isLoading) {
@@ -136,12 +137,17 @@ const ViewCampaign = () => {
     <div className="flex flex-col gap-2">
       <Toaster />
       <div
-        className={`flex flex-col md:flex-row gap-10 border-base-300 ${
+        className={`flex flex-col md:flex-row md:gap-5 lg:gap-10 border-base-300 ${
           theme == "black" ? "border-2" : "border-1"
         } p-5 mx-10 shadow-lg`}
       >
         <div className="flex-1 flex flex-col gap-2">
-          <div>
+          <div
+            className={`${
+              urlIsLoading &&
+              "h-40 sm:h-55 md:h-65 lg:h-80 xl:h-100 w-full skeleton"
+            }`}
+          >
             <iframe
               width="100%"
               height="100%"
@@ -150,6 +156,7 @@ const ViewCampaign = () => {
               allowFullScreen
               title={campaign.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              onLoad={() => setIsLoading(false)}
             ></iframe>
           </div>
           <div className="flex gap-4 items-center">
@@ -195,7 +202,7 @@ const ViewCampaign = () => {
             </p>
           </div>
 
-          <div className="flex mt-4">
+          <div className="flex mt-4 justify-center md:justify-start">
             <div
               className={`stats ${
                 theme == "black"
@@ -221,30 +228,33 @@ const ViewCampaign = () => {
           </div>
           {campaign?.userid._id != userId && (
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-3 mt-5">
+              <Link to={`/chat/${campaign?.userid._id}`}>
+                <button
+                  className={`btn btn-outline btn-primary py-2 sm:py-6 rounded-sm   ${
+                    theme == "black"
+                      ? "text-white hover:text-black hover:bg-white"
+                      : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
+                  } shadow-sm flex gap-2 items-center justify-center w-full`}
+                >
+                  <MessageCircle
+                    strokeWidth={1}
+                    className="w-4 h-4 sm:w-6 sm:h-6"
+                  />
+                  <p className="font-heading text-xs lg:text-sm font-light">
+                    Message Creator
+                  </p>
+                </button>
+              </Link>
+
               <button
-                className={`btn btn-outline btn-primary py-2 px-3 sm:py-6 sm:px-6 rounded-sm   ${
-                  theme == "black"
-                    ? "text-white hover:text-black hover:bg-white"
-                    : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
-                } shadow-sm flex gap-2 items-center justify-center`}
-              >
-                <MessageCircle
-                  strokeWidth={1}
-                  className="w-4 h-4 sm:w-6 sm:h-6"
-                />
-                <p className="font-heading text-xs sm:text-sm font-light">
-                  Message Creator
-                </p>
-              </button>
-              <button
-                className={`btn btn-outline btn-primary py-2 px-3 sm:py-6 sm:px-10 rounded-sm   ${
+                className={`btn btn-outline btn-primary py-2 sm:py-6 rounded-sm   ${
                   theme == "black"
                     ? "text-white hover:text-black hover:bg-white"
                     : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
                 } shadow-sm flex gap-2 items-center justify-center`}
               >
                 <PiggyBank strokeWidth={1} className="w-4 h-4 sm:w-6 sm:h-6" />
-                <p className="font-heading text-xs sm:text-sm font-light">
+                <p className="font-heading text-xs font-light lg:text-sm">
                   Back this project
                 </p>
               </button>

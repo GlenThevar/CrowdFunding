@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 import ChatItem from "./ChatItem";
 import ChatSearch from "./ChatSearch";
@@ -15,13 +16,28 @@ const ChatList = () => {
 
   useEffect(() => {
     const fetchChats = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        toast.error("Authentication token not found. Please log in again.");
+        setLoading(false);
+        return;
+      }
       try {
         const res = await axios.get(
-          `http://localhost:3000/chat/list/${userId}`
+          `http://localhost:3000/chat/list/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setChatList(res.data.data || []);
       } catch (err) {
         console.error("Error fetching chat list:", err);
+        toast.error(
+          err.response?.data?.message || "Could not fetch chat list."
+        );
       } finally {
         setLoading(false);
       }
@@ -71,18 +87,37 @@ const ChatList = () => {
         ) : (
           chatList.map((chat) => {
             const otherUser = chat.participants.find((p) => p._id !== userId);
-            const lastMessage = chat.lastMessage?.content || "No messages yet";
-            const lastMessageDate = chat.lastMessage?.createdAt
-              ? new Date(chat.lastMessage.createdAt).toLocaleDateString()
+
+            if (!otherUser) return null;
+
+            const lastMessage = chat.lastMessage;
+            const lastMessageDate = lastMessage?.createdAt
+              ? new Date(lastMessage.createdAt).toLocaleDateString()
               : "";
 
+            let lastTextDisplay = "No messages yet";
+            let isUnread = false;
+
+            if (lastMessage && lastMessage.content) {
+              if (lastMessage.content.image) {
+                lastTextDisplay = "Image";
+              } else if (lastMessage.content.text) {
+                lastTextDisplay = lastMessage.content.text;
+              }
+
+              if (lastMessage.sender && lastMessage.sender._id !== userId) {
+                isUnread = lastMessage.seen === false;
+              }
+            }
+
             return (
-              <Link to={`/chat/${otherUser?._id}`} key={chat._id}>
+              <Link to={`/chat/${otherUser._id}`} key={chat._id}>
                 <ChatItem
-                  name={otherUser?.username || "Unknown"}
-                  profilePhoto={otherUser?.profileUrl || ""}
-                  lastText={lastMessage}
+                  name={otherUser.username || "Unknown"}
+                  profilePhoto={otherUser.profileUrl || ""}
+                  lastText={lastTextDisplay}
                   date={lastMessageDate}
+                  isUnread={isUnread}
                 />
               </Link>
             );

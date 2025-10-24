@@ -8,6 +8,7 @@ import { router as Campaignrouter } from "./routes/CampaignRoutes.js";
 import { router as AuthRouter } from "./routes/AuthRoutes.js";
 import { router as UserRouter } from "./routes/UserRoute.js";
 import { router as ChatRouter } from "./routes/ChatRoutes.js";
+// import { router as PaymentRouter } from "./routes/PaymentRoute.js";
 
 dotenv.config();
 
@@ -33,3 +34,4 @@ app.use("/campaigns", Campaignrouter);
 app.use("/auth", AuthRouter);
 app.use("/user", UserRouter);
 app.use("/chat", ChatRouter);
+// app.use("/payment", PaymentRouter);

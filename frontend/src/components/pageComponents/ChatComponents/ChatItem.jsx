@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { AppContext } from "../../../context/AppContext";
 
-const ChatItem = ({ name, profilePhoto, lastText, date }) => {
+const ChatItem = ({ name, profilePhoto, lastText, date, isUnread }) => {
   const { theme } = useContext(AppContext);
 
   return (
@@ -26,11 +26,20 @@ const ChatItem = ({ name, profilePhoto, lastText, date }) => {
         </div>
         <div className="flex-col grow">
           <div className="flex items-center justify-between">
-            <div className="font-heading text-sm">{name}</div>
+            <div className="flex gap-1">
+              <div className="font-heading text-sm">{name}</div>
+              {isUnread && (
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    theme == "black" ? "bg-white" : "bg-green-900"
+                  }  animate-bounce`}
+                ></div>
+              )}
+            </div>
             <div className="font-heading text-xs font-light">{date}</div>
           </div>
           <div>
-            <div className="font-subheading text-xs font-light">{lastText}</div>
+            <div className={`font-subheading text-xs `}>{lastText}</div>
           </div>
         </div>
       </div>

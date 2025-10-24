@@ -91,14 +91,16 @@ const NavbarHome = () => {
               </li>
             </ul>
           </div>
-          <div className="cursor-pointer dropdown dropdown-bottom dropdown-end">
+          <div
+            className={`cursor-pointer dropdown dropdown-bottom dropdown-end`}
+          >
             <div
               className="w-9 sm:w-12 rounded-full hover:border-2 cursor-pointer"
               tabIndex={1}
             >
               <img
                 src={userprofile || placeholderPhoto}
-                className="rounded-full"
+                className={`rounded-full`}
               />
             </div>
             <ul

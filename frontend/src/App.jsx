@@ -11,7 +11,6 @@ import LoginAuth from "./components/pageComponents/AuthComponents/LoginAuth";
 import HomeAuth from "./components/pageComponents/AuthComponents/HomeAuth";
 import AuthLayout from "./page/AuthLayout";
 import SignupAuth from "./components/pageComponents/AuthComponents/SignupAuth";
-import Test from "./components/pageComponents/HomeComponents/Test";
 import VerifyEmail from "./components/pageComponents/AuthComponents/VerifyEmail";
 import OauthScreen from "./components/pageComponents/AuthComponents/OauthScreen";
 import UserPage from "./page/UserPage";
@@ -24,7 +23,6 @@ const App = () => {
     <div data-theme={theme}>
       <Router>
         <Routes>
-          <Route path="/test" element={<Test />} />
           <Route path="/" element={<HomeLayout />}>
             <Route index element={<Home />} />
             <Route path="campaign/:id" element={<CampaignPage />} />

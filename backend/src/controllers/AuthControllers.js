@@ -6,8 +6,6 @@ import Cookies from "js-cookie";
 
 import { users } from "../models/user.js";
 
-dotenv.config();
-
 export const registerController = async (req, res) => {
   try {
     const { username, email, password, lastLogin, accountCreated } = req.body;
@@ -24,8 +22,8 @@ export const registerController = async (req, res) => {
     const transport = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "th3var@gmail.com",
-        pass: "mocy lnev aclx mhdd",
+        user: process.env.user_email,
+        pass: process.env.user_pass,
       },
     });
 
@@ -147,7 +145,7 @@ export const checkAccessToken = async (req, res) => {
   else return res.status(404).json({ message: "failure" });
 };
 
-export const returnCookie = () => {
-  const ck = Cookies.get("oauthToken");
-  console.log(ck);
-};
+// export const returnCookie = () => {
+//   const ck = Cookies.get("oauthToken");
+//   console.log(ck);
+// };

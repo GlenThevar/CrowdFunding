@@ -4,7 +4,10 @@ import mongoose from "mongoose";
 
 export async function sendMessage(req, res) {
   try {
-    const { sender, content } = req.body;
+    const { sender, text } = req.body;
+
+    const imageUrl = req.file ? req.file.path : null;
+
     const receiver = req.params.receiverId;
 
     if (
@@ -13,6 +16,11 @@ export async function sendMessage(req, res) {
     ) {
       return res.status(400).json({ message: "Invalid sender or receiver ID" });
     }
+
+    const content = {
+      text: text || null,
+      image: imageUrl,
+    };
 
     let chat = await Chats.findOne({
       participants: { $all: [sender, receiver] },
@@ -36,7 +44,7 @@ export async function sendMessage(req, res) {
     const populatedChat = await Chats.findById(chat._id)
       .populate({
         path: "lastMessage",
-        populate: { path: "sender", select: "username profileUrl" },
+        populate: [{ path: "sender", select: "username profileUrl" }],
       })
       .populate("participants", "username profileUrl");
 
@@ -89,6 +97,36 @@ export async function getMessages(req, res) {
     return res.status(200).json({
       message: "Messages fetched successfully",
       data: messages,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function markMessagesAsSeen(req, res) {
+  try {
+    const { chatId } = req.params;
+    const userId = req.user._id;
+
+    if (!mongoose.Types.ObjectId.isValid(chatId)) {
+      return res.status(400).json({ message: "Invalid chat ID" });
+    }
+
+    const result = await Messages.updateMany(
+      {
+        chat: chatId,
+        sender: { $ne: userId },
+        seen: false,
+      },
+      {
+        $set: { seen: true },
+      }
+    );
+
+    return res.status(200).json({
+      message: "Messages marked as seen",
+      data: { modifiedCount: result.modifiedCount },
     });
   } catch (err) {
     console.error(err);

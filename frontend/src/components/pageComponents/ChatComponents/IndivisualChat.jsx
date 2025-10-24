@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { SendHorizontal, ArrowLeft } from "lucide-react";
+import { SendHorizontal, ArrowLeft, Paperclip, X } from "lucide-react";
 import { useMediaQuery } from "react-responsive";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
+import Viewer from "react-viewer";
+import { toast } from "react-hot-toast";
 
+import placeholderPhoto from "../../../data/images/placeholderPhoto.jpg";
 import { AppContext } from "../../../context/AppContext";
 
 const IndivisualChat = () => {
@@ -11,7 +14,14 @@ const IndivisualChat = () => {
   const { id: receiverId } = useParams();
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState("");
+  const [file, setFile] = useState(null);
+  const [tempUrl, setTempUrl] = useState(null);
   const [chatId, setChatId] = useState(null);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [viewerImages, setViewerImages] = useState([]);
+
   const chatEndRef = useRef(null);
   const isLg = useMediaQuery({ query: "(min-width:1024px)" });
 
@@ -20,17 +30,23 @@ const IndivisualChat = () => {
   }, [messages]);
 
   useEffect(() => {
-    console.log("Current User" + ": " + userId);
-    console.log("Other User" + ": " + receiverId);
-  }, [userId, receiverId]);
-
-  useEffect(() => {
     const fetchMessages = async () => {
       if (!userId || !receiverId) return;
 
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        toast.error("Authentication token not found");
+        return;
+      }
       try {
         const chatListRes = await axios.get(
-          `http://localhost:3000/chat/list/${userId}`
+          `http://localhost:3000/chat/list/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const chat = chatListRes.data.data.find((c) =>
           c.participants.some((p) => p._id === receiverId)
@@ -40,43 +56,113 @@ const IndivisualChat = () => {
           setChatId(chat._id);
 
           const msgRes = await axios.get(
-            `http://localhost:3000/chat/messages/${chat._id}`
+            `http://localhost:3000/chat/messages/${chat._id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           setMessages(msgRes.data.data || []);
+
+          try {
+            await axios.patch(
+              `http://localhost:3000/chat/messages/seen/${chat._id}`,
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+          } catch (seenErr) {
+            console.error("Could not mark messages as seen:", seenErr);
+          }
         } else {
           setMessages([]);
         }
       } catch (err) {
         console.error("Error fetching chat messages:", err);
+        toast.error(err.response?.data?.message || "Error fetching messages.");
       }
     };
 
     fetchMessages();
   }, [userId, receiverId]);
 
+  const fileReseat = () => {
+    setFile(null);
+    setTempUrl(null);
+    document.getElementById("upload").value = null;
+  };
+
   const handleSend = async () => {
-    if (!messageInput.trim()) return;
+    if (!messageInput.trim() && !file) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Authentication token not found");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("sender", userId);
+
+    if (messageInput.trim()) {
+      formData.append("text", messageInput.trim());
+    }
+    if (file) {
+      formData.append("image", file);
+    }
 
     try {
       const res = await axios.post(
         `http://localhost:3000/chat/send/${receiverId}`,
+        formData,
         {
-          sender: userId,
-          content: messageInput,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
-      const newMessage = {
-        _id: Date.now(),
-        sender: { _id: userId },
-        content: messageInput,
-        createdAt: new Date().toISOString(),
-      };
-      setMessages((prev) => [...prev, newMessage]);
+      const newPopulatedMessage = res.data.data.lastMessage;
+      setMessages((prev) => [...prev, newPopulatedMessage]);
+
       setMessageInput("");
+      fileReseat();
     } catch (err) {
       console.error("Error sending message:", err);
+      toast.error(err.response?.data?.message || "Error sending message.");
     }
+  };
+
+  const fileUploadClick = () => {
+    document.getElementById("upload").click();
+  };
+
+  const handleChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    if (selectedFile.size > 1000000) {
+      toast.error("File size cannot be over 1 MB");
+      return;
+    }
+    setFile(selectedFile);
+  };
+
+  useEffect(() => {
+    if (file) {
+      setTempUrl(URL.createObjectURL(file));
+    } else {
+      setTempUrl(null);
+    }
+  }, [file]);
+
+  const showImagePreview = (imageUrl) => {
+    setViewerImages([{ src: imageUrl, alt: "Preview" }]);
+    setPreviewVisible(true);
   };
 
   return (
@@ -103,7 +189,10 @@ const IndivisualChat = () => {
           </div>
         ) : (
           messages.map((msg) => {
-            const isMe = msg.sender._id === userId;
+            const isMe = msg.sender && msg.sender._id === userId;
+            const senderName = msg.sender ? msg.sender.username : "User";
+            const profileUrl = msg.sender ? msg.sender.profileUrl : null;
+
             return (
               <div
                 key={msg._id}
@@ -112,16 +201,13 @@ const IndivisualChat = () => {
                 <div className="chat-image avatar">
                   <div className="w-10 rounded-full">
                     <img
-                      alt={isMe ? "Me" : "User"}
-                      src={
-                        msg.sender.profileUrl ||
-                        "https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
-                      }
+                      alt={isMe ? "Me" : senderName}
+                      src={profileUrl || placeholderPhoto}
                     />
                   </div>
                 </div>
                 <div className="chat-header font-heading text-xs">
-                  {msg.sender.username || (isMe ? "You" : "User")}
+                  {isMe ? "You" : senderName}
                   <time className="opacity-50 ml-2 font-heading text-[10px]">
                     {new Date(msg.createdAt).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -129,9 +215,28 @@ const IndivisualChat = () => {
                     })}
                   </time>
                 </div>
-                <div className="chat-bubble font-subheading text-xs">
-                  {msg.content}
+
+                <div className="chat-bubble font-subheading text-xs flex flex-col gap-2">
+                  {msg.content?.image && (
+                    <div className={`${imageLoading && "skeleton h-30 w-48"}`}>
+                      <img
+                        src={msg.content.image}
+                        alt="Chat message"
+                        className={`w-48 h-auto rounded-md cursor-pointer ${
+                          imageLoading && "hidden"
+                        }`}
+                        onClick={() => showImagePreview(msg.content.image)}
+                        onLoad={() => setImageLoading(false)}
+                      />
+                    </div>
+                  )}
+                  {msg.content?.text && <p>{msg.content.text}</p>}
                 </div>
+                {isMe && (
+                  <div className="chat-footer opacity-50">
+                    {msg.seen ? "Seen" : "Delivered"}
+                  </div>
+                )}
               </div>
             );
           })
@@ -140,29 +245,76 @@ const IndivisualChat = () => {
       </div>
 
       <div
-        className={`flex-shrink-0 sticky bottom-0 z-10 p-4 bg-base-100 ${
+        className={`flex flex-col items-center gap-4 flex-shrink-0 sticky bottom-0 z-10 p-4 bg-base-100 ${
           theme === "black"
             ? "border-t-2 border-t-base-300"
             : "border-t border-t-base-200"
         }`}
       >
-        <div
-          className={`p-2 flex gap-4 rounded-sm border border-base-300 ${
-            theme === "black" ? "bg-base-300" : "bg-base-200"
-          }`}
-        >
-          <input
-            type="text"
-            value={messageInput}
-            onChange={(e) => setMessageInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            className="w-full font-subheading focus:outline-none resize-none bg-transparent"
-            placeholder="Type a message..."
-          />
-          <SendHorizontal
-            className="cursor-pointer hover:opacity-80"
-            onClick={handleSend}
-          />
+        <Viewer
+          visible={previewVisible}
+          onClose={() => {
+            setPreviewVisible(false);
+            setViewerImages([]);
+          }}
+          images={viewerImages}
+          changeable={false}
+          drag={false}
+        />
+
+        {tempUrl && (
+          <div>
+            <div className="flex gap-4 items-center ">
+              <div
+                className="text-xs font-heading cursor-pointer"
+                onClick={() => showImagePreview(tempUrl)}
+              >
+                Preview Image
+              </div>
+              <div className="">
+                <X
+                  className="h-4 w-4 hover:cursor-pointer"
+                  onClick={fileReseat}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center w-full gap-4">
+          <div>
+            <input
+              type="file"
+              id="upload"
+              name="filename"
+              className="hidden"
+              onChange={handleChange}
+              accept="image/png, image/jpeg, image/jpg"
+            ></input>
+            <Paperclip
+              onClick={fileUploadClick}
+              id="uploadbutton"
+              className="hover:cursor-pointer"
+            />
+          </div>
+          <div
+            className={`p-2 flex flex-1 gap-4 rounded-sm border border-base-300 ${
+              theme === "black" ? "bg-base-300" : "bg-base-200"
+            }`}
+          >
+            <input
+              type="text"
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              className="w-full font-subheading focus:outline-none resize-none bg-transparent"
+              placeholder="Type a message..."
+            />
+            <SendHorizontal
+              className="cursor-pointer hover:opacity-80"
+              onClick={handleSend}
+            />
+          </div>
         </div>
       </div>
     </div>
