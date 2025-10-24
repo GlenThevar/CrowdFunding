@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Origami,
@@ -16,10 +16,13 @@ import SearchNav from "./SearchNav";
 import Slider from "./Slider";
 import { AppContext } from "../../../context/AppContext";
 import { Button } from "primereact/button";
+import axios from "axios";
+import placeholderPhoto from "../../../data/images/placeholderPhoto.jpg";
 
 const NavbarHome = () => {
   const navigate = useNavigate();
   const { theme, userId } = useContext(AppContext);
+  const [userprofile, setUserProfile] = useState(null);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -27,6 +30,19 @@ const NavbarHome = () => {
       replace: true,
     });
   };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const userRes = await axios.get(`http://localhost:3000/user/${userId}`);
+        setUserProfile(userRes.data.profileUrl);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (userId) getData();
+  }, [userId]);
 
   return (
     <div
@@ -81,7 +97,7 @@ const NavbarHome = () => {
               tabIndex={1}
             >
               <img
-                src="https://img.daisyui.com/images/profile/demo/batperson@192.webp"
+                src={userprofile || placeholderPhoto}
                 className="rounded-full"
               />
             </div>

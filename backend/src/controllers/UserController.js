@@ -4,7 +4,7 @@ export async function getUserData(req, res) {
   try {
     const result = await users.findById(req.params.id);
     if (!result) {
-      res.status(404).json({ message: "Campaign not found" });
+      res.status(404).json({ message: "User not found" });
     }
     res.status(200).json(result);
   } catch (err) {
@@ -20,7 +20,13 @@ export async function updateProfile(req, res) {
 
     const profileUrl = req.file?.path;
 
-    const result = await users.findByIdAndUpdate(req.params.id, {
+    const userid = req.user.id;
+
+    if (!userid) {
+      return res.status(401).json({ message: "User not authenticated." });
+    }
+
+    const result = await users.findByIdAndUpdate(userid, {
       username,
       shortDiscription,
       longDiscription,

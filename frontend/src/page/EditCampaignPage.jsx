@@ -1,17 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { StickyNote, CircleX } from "lucide-react";
 import { Editor } from "primereact/editor";
 import { FileUpload } from "primereact/fileupload";
 import { AppContext } from "../context/AppContext";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import allTags from "../data/allCampaignTags";
+import interestingFacts from "../data/interestingInfo";
 
-const CreateCampaignPage = () => {
+const EditCampaignPage = () => {
   const { theme, userId } = useContext(AppContext);
   const navigate = useNavigate();
+
+  const { id: campaignId } = useParams();
 
   const [title, setTitle] = useState("");
   const [discription, setDiscription] = useState("");
@@ -29,8 +32,64 @@ const CreateCampaignPage = () => {
   const [imageError, setImageError] = useState("");
   const [editorError, setEditorError] = useState("");
   const [tagError, setTagError] = useState("");
+  const [loadCount, setLoadCount] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isPageLoading, setIsPageLoading] = useState(true);
+  const [pageError, setPageError] = useState(null);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setTimeout(() => {
+        if (loadCount == 49) setLoadCount(0);
+        else setLoadCount((prev) => prev + 1);
+      }, 5000);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    const fetchCampaignData = async () => {
+      setIsPageLoading(true);
+      setPageError(null);
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/campaigns/${campaignId}`
+        );
+        const campaignData = response.data;
+
+        if (campaignData) {
+          setTitle(campaignData.title || "");
+          setDiscription(campaignData.discription || "");
+          setUrl(campaignData.youtubeUrl || "");
+          setFunds(campaignData.goalAmount?.toString() || "");
+          setText(campaignData.content || "");
+          setTags(campaignData.tags || []);
+          setFaq(
+            campaignData.faq?.map((item, index) => ({
+              id: item._id,
+              Question: item.Question,
+              Answer: item.Answer,
+            })) || [{ id: 0, Question: "", Answer: "" }]
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching campaign data:", err);
+        setPageError("Error fetching campaign data");
+        toast.error("Error fetching campaign data");
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
+
+    if (campaignId) {
+      fetchCampaignData();
+    } else {
+      setPageError("Campaign ID not found in URL.");
+      toast.error("Campaign ID not found in URL.");
+      setIsPageLoading(false);
+    }
+  }, [campaignId]);
 
   const titleChange = (e) => setTitle(e.target.value);
   const discriptionChange = (e) => setDiscription(e.target.value);
@@ -55,7 +114,6 @@ const CreateCampaignPage = () => {
 
   const handleTagClick = (tag) => {
     const isSelected = tags.includes(tag);
-
     if (isSelected) {
       setTags(tags.filter((t) => t !== tag));
       setTagError("");
@@ -84,7 +142,7 @@ const CreateCampaignPage = () => {
       const err = "Description cannot be empty";
       setDescriptionError(err);
       return err;
-    } else if (discription.length >= 50) {
+    } else if (discription.length > 50) {
       const err = "Description cannot be more than 50 characters";
       setDescriptionError(err);
       return err;
@@ -130,15 +188,20 @@ const CreateCampaignPage = () => {
     }
   };
 
-  const validateImagesOnSubmit = () => {
-    if (images.length <= 3) {
-      const err = "At least 4 image is required.";
+  const validateNewImagesOnSubmit = () => {
+    if (images.length === 0) {
+      setImageError("");
+      return null;
+    }
+    const invalidSize = Array.from(images).some((file) => file.size > 1000000);
+    if (invalidSize) {
+      const err = "Each newly selected image must be below 1MB";
       setImageError(err);
       return err;
     }
-    const invalid = Array.from(images).some((file) => file.size > 1000000);
-    if (invalid) {
-      const err = "Each image must be below 1MB";
+
+    if (images.length > 0 && images.length <= 3) {
+      const err = "At least 4 are required.";
       setImageError(err);
       return err;
     }
@@ -147,8 +210,7 @@ const CreateCampaignPage = () => {
   };
 
   const validateEditor = () => {
-    const plainText = text.replace(/<[^>]+>/g, "").trim();
-    if (!plainText) {
+    if (!text) {
       const err = "Project description cannot be empty";
       setEditorError(err);
       return err;
@@ -164,7 +226,7 @@ const CreateCampaignPage = () => {
       validateUrl(),
       validateFunds(),
       validateEditor(),
-      validateImagesOnSubmit(),
+      validateNewImagesOnSubmit(),
     ];
 
     const validationErrors = errors.filter((err) => err !== null);
@@ -175,10 +237,8 @@ const CreateCampaignPage = () => {
     }
 
     const token = localStorage.getItem("token");
-
     if (!token) {
       toast.error("Authentication token not found. Please log in again.");
-      setIsLoading(false);
       return;
     }
 
@@ -191,17 +251,18 @@ const CreateCampaignPage = () => {
     formData.append("url", url);
     formData.append("funds", funds);
     formData.append("text", text);
-
     formData.append("faq", JSON.stringify(faq));
     formData.append("tags", JSON.stringify(tags));
 
-    images.forEach((file) => {
-      formData.append("images", file);
-    });
+    if (images.length > 0) {
+      images.forEach((file) => {
+        formData.append("images", file);
+      });
+    }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/campaigns/",
+      const response = await axios.patch(
+        `http://localhost:3000/campaigns/${campaignId}`,
         formData,
         {
           headers: {
@@ -211,17 +272,38 @@ const CreateCampaignPage = () => {
         }
       );
 
-      const savedCampaign = response.data;
-      toast.success("Campaign created successfully!");
-
+      toast.success("Campaign updated successfully!");
       navigate(`/user/${userId}`);
     } catch (error) {
-      console.error("error occoured while submission", error);
-      toast.error("error occoured");
+      console.error("Error updating campaign:", error);
+      toast.error("Error updating campaign:");
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isPageLoading) {
+    return (
+      <div className="flex flex-col gap-2 justify-center items-center h-full">
+        <span className="loading loading-ring loading-lg"></span>
+        <div className="flex flex-col gap-1 items-center">
+          <p className="font-heading font-semibold text-xs">DID YOU KNOW ?</p>
+          <p className="font-heading text-xs">{interestingFacts[loadCount]} </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (pageError) {
+    return (
+      <div className="flex flex-col justify-center items-center h-full">
+        <span className="loading loading-ring loading-lg"></span>
+        <p className="text-xs font-heading">
+          Error Occoured, try retracing your steps ?{" "}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -234,6 +316,9 @@ const CreateCampaignPage = () => {
       <Toaster />
 
       <div className="flex flex-col m-10 gap-8">
+        <h1 className="text-2xl font-heading font-bold mb-0 -mt-2">
+          Edit Campaign
+        </h1>
         <div className="flex flex-col gap-2">
           <p className="font-heading font-semibold text-sm md:text-base">
             Post Title
@@ -342,6 +427,7 @@ const CreateCampaignPage = () => {
           <p className="font-heading font-semibold text-sm sm:text-base">
             Thumbnail Images
           </p>
+
           <FileUpload
             multiple
             accept="image/*"
@@ -349,7 +435,9 @@ const CreateCampaignPage = () => {
             maxFileSize={1000000}
             onSelect={(e) => validateImages(e.files)}
             onRemove={(e) =>
-              setImages(images.filter((f) => f.name !== e.file.name))
+              setImages((currentImages) =>
+                currentImages.filter((f) => f.name !== e.file.name)
+              )
             }
             onClear={() => setImages([])}
             chooseOptions={{
@@ -409,8 +497,8 @@ const CreateCampaignPage = () => {
           <div className="flex gap-2 items-center">
             <StickyNote strokeWidth={1} className="w-4 h-4" />
             <p className="text-xs font-extralight">
-              These images will be shown on the thumbnail and improve selection
-              chances
+              Upload new images to replace the existing ones. If you upload any,
+              you must upload at least 4. Max 1MB each.
             </p>
           </div>
         </div>
@@ -453,7 +541,7 @@ const CreateCampaignPage = () => {
 
         <div className="flex flex-col gap-2">
           <p className="font-heading font-semibold text-sm sm:text-base">
-            Campaign Tags
+            Campaign Tags (Max 2)
           </p>
           <div
             className={`p-4 rounded-lg ${
@@ -471,7 +559,11 @@ const CreateCampaignPage = () => {
                     type="button"
                     onClick={() => handleTagClick(tag)}
                     className={`btn btn-xs rounded-full font-heading ${
-                      isSelected ? "bg-green-900 text-white" : "btn-ghost"
+                      isSelected
+                        ? theme === "black"
+                          ? "btn-primary"
+                          : "bg-green-900 text-white"
+                        : "btn-ghost"
                     }`}
                   >
                     {tag}
@@ -508,7 +600,7 @@ const CreateCampaignPage = () => {
                 >
                   <textarea
                     className="focus:outline-0 w-full h-full font-subheading resize-none text-xs md:text-sm"
-                    placeholder={`Enter Question ${data.id}`}
+                    placeholder={`Enter Question`}
                     value={data.Question}
                     onChange={(e) =>
                       faqChange(data.id, "Question", e.target.value)
@@ -524,7 +616,7 @@ const CreateCampaignPage = () => {
                 >
                   <textarea
                     className="focus:outline-0 w-full h-full font-subheading resize-none text-xs md:text-sm"
-                    placeholder={`Enter Answer ${data.id}`}
+                    placeholder={`Enter Answer`}
                     value={data.Answer}
                     onChange={(e) =>
                       faqChange(data.id, "Answer", e.target.value)
@@ -561,7 +653,6 @@ const CreateCampaignPage = () => {
         </div>
 
         <div className="flex flex-col gap-2 mb-10">
-          {" "}
           <p className="font-heading font-semibold text-base">
             Project Description
           </p>
@@ -589,7 +680,7 @@ const CreateCampaignPage = () => {
             disabled={isLoading}
           >
             <p className="font-heading text-xs sm:text-sm font-light">
-              {isLoading ? "Submitting..." : "Submit"}
+              {isLoading ? "Saving..." : "Save Changes"}
             </p>
           </button>
         </div>
@@ -598,4 +689,4 @@ const CreateCampaignPage = () => {
   );
 };
 
-export default CreateCampaignPage;
+export default EditCampaignPage;

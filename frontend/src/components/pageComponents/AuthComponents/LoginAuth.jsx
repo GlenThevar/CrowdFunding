@@ -141,14 +141,10 @@ const LoginAuth = () => {
             className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
             onClick={submitForm}
           >
-            {loading ? (
-              <span className="loading loading-infinity loading-xl"></span>
-            ) : (
-              <p>LOG IN</p>
-            )}
+            {loading ? <p>LOGGING</p> : <p>LOG IN</p>}
           </button>
         </div>
-        <div className="flex w-full">
+        {/* <div className="flex w-full">
           <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
           <div className="font-heading text-xs mx-2">OR</div>
           <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
@@ -160,7 +156,7 @@ const LoginAuth = () => {
           >
             <Google className="w-5 h-5" />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

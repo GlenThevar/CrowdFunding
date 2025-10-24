@@ -15,6 +15,7 @@ import Test from "./components/pageComponents/HomeComponents/Test";
 import VerifyEmail from "./components/pageComponents/AuthComponents/VerifyEmail";
 import OauthScreen from "./components/pageComponents/AuthComponents/OauthScreen";
 import UserPage from "./page/UserPage";
+import EditCampaignPage from "./page/EditCampaignPage";
 
 const App = () => {
   const { theme } = useContext(AppContext);
@@ -26,8 +27,9 @@ const App = () => {
           <Route path="/test" element={<Test />} />
           <Route path="/" element={<HomeLayout />}>
             <Route index element={<Home />} />
-            <Route path="campaign" element={<CampaignPage />} />
+            <Route path="campaign/:id" element={<CampaignPage />} />
             <Route path="create" element={<CreateCampaignPage />} />
+            <Route path="edit/:id" element={<EditCampaignPage />} />
             <Route path="chat" element={<Chat />} />
             <Route path="chat/:id" element={<Chat />} />
             <Route path="user/:id" element={<UserPage />} />

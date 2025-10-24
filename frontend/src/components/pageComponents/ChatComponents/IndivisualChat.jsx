@@ -15,7 +15,6 @@ const IndivisualChat = () => {
   const chatEndRef = useRef(null);
   const isLg = useMediaQuery({ query: "(min-width:1024px)" });
 
-  // Auto-scroll to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

@@ -225,11 +225,7 @@ const SignupAuth = () => {
             onClick={submitForm}
             className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
           >
-            {loading ? (
-              <span className="loading loading-infinity loading-xl"></span>
-            ) : (
-              <p>SIGN UP</p>
-            )}
+            {loading ? <p>REGISTERING</p> : <p>SIGN UP</p>}
           </button>
         </div>
       </div>

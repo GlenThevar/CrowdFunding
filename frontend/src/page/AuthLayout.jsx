@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
@@ -47,10 +47,10 @@ const AuthLayout = () => {
       <div>
         <dialog id="autologin_modal" className="modal">
           <div className="modal-box bg-base-300 flex flex-col items-center w-fit">
-            <h3 className="font-bold text-lg font-heading">
+            <span className="loading loading-ring loading-xl"></span>
+            <h3 className="font-semibold text-sm font-heading">
               Be patient while we log you in
             </h3>
-            <span className="loading loading-infinity loading-xl"></span>
           </div>
         </dialog>
       </div>

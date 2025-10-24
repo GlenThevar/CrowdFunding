@@ -5,11 +5,13 @@ import axios from "axios";
 import ChatItem from "./ChatItem";
 import ChatSearch from "./ChatSearch";
 import { AppContext } from "../../../context/AppContext";
+import interestingFacts from "../../../data/interestingInfo";
 
 const ChatList = () => {
   const { theme, userId } = useContext(AppContext);
   const [chatList, setChatList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadCount, setLoadCount] = useState(0);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -28,6 +30,15 @@ const ChatList = () => {
     if (userId) fetchChats();
   }, [userId]);
 
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        if (loadCount == 49) setLoadCount(0);
+        else setLoadCount((prev) => prev + 1);
+      }, 5000);
+    }
+  }, [loading]);
+
   return (
     <div className="flex flex-col h-full">
       <div
@@ -42,8 +53,16 @@ const ChatList = () => {
 
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <div className="flex justify-center font-heading items-center h-full text-sm opacity-70">
-            Loading chats...
+          <div className="flex flex-col gap-2 justify-center items-center mt-10">
+            <span className="loading loading-ring loading-lg"></span>
+            <div className="flex flex-col gap-1 items-center">
+              <p className="font-heading font-semibold text-xs">
+                DID YOU KNOW ?
+              </p>
+              <p className="font-heading text-xs">
+                {interestingFacts[loadCount]}{" "}
+              </p>
+            </div>
           </div>
         ) : chatList.length === 0 ? (
           <div className="flex justify-center font-heading items-center h-full text-sm opacity-70">
