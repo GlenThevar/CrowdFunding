@@ -50,7 +50,7 @@ const HomeLayout = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         {" "}
-        <span className="loading loading-infinity w-20 h-20"></span>
+        <span className="loading loading-ring w-15 h-15"></span>
         <p className="font-heading">Be patient, were loading</p>
       </div>
     );

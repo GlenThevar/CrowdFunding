@@ -10,18 +10,18 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import Avatar from "./Avatar";
 import ThemeController from "./ThemeController";
 import SearchNav from "./SearchNav";
 import Slider from "./Slider";
 import { AppContext } from "../../../context/AppContext";
-import { Button } from "primereact/button";
+
 import axios from "axios";
 import placeholderPhoto from "../../../data/images/placeholderPhoto.jpg";
 
 const NavbarHome = () => {
   const navigate = useNavigate();
-  const { theme, userId } = useContext(AppContext);
+  const { theme, userId, SetSearchingByTags, setTagsToSearch } =
+    useContext(AppContext);
   const [userprofile, setUserProfile] = useState(null);
 
   const logout = () => {
@@ -51,7 +51,13 @@ const NavbarHome = () => {
       } border-base-300 shadow-sm`}
     >
       <div className="flex flex-wrap justify-between py-3 px-3">
-        <Link to="/">
+        <Link
+          to="/"
+          onClick={() => {
+            setTagsToSearch("");
+            SetSearchingByTags(false);
+          }}
+        >
           <div className="flex justify-center items-center gap-2 order-1">
             <Origami strokeWidth={1} className="w-9 h-9 sm:w-12 sm:h-12" />
             <p className="font-logo text-2xl sm:text-3xl font-black">FUND IT</p>

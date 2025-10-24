@@ -122,6 +122,9 @@ export const loginController = async (req, res) => {
       });
     }
 
+    userExist.lastLogin = new Date();
+    await userExist.save();
+
     const accessToken = jwt.sign(
       { id: userExist._id, email: userExist.username },
       process.env.jwt_secret_key,

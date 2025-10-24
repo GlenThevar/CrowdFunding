@@ -13,6 +13,7 @@ import {
   SingleCampaign,
   UpdateCampaign,
   UserCampaigns,
+  TagsCampaigns,
 } from "../controllers/CampaignControllers.js";
 
 cloudinary.config({
@@ -51,6 +52,7 @@ router.post(
 );
 
 router.get("/", AllCampaign);
+router.get("/tag/:tag", TagsCampaigns);
 router.get("/:id", SingleCampaign);
 router.get("/user/:id", UserCampaigns);
 

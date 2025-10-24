@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Splide, SplideSlide, SplideTrack } from "@splidejs/react-splide";
 import { AutoScroll } from "@splidejs/splide-extension-auto-scroll";
 import "@splidejs/react-splide/css";
 
-import tags from "../../../data/navbartags";
+import allTags from "../../../data/allCampaignTags";
+import { AppContext } from "../../../context/AppContext";
 
 const Slider = () => {
+  const { SetSearchingByTags, setTagsToSearch } = useContext(AppContext);
+
+  function cl(e) {
+    SetSearchingByTags(true);
+    setTagsToSearch(e.trim());
+  }
+
   return (
     <div>
       <Splide
@@ -25,9 +33,12 @@ const Slider = () => {
         extensions={{ AutoScroll }}
       >
         <SplideTrack>
-          {tags.map((data) => (
+          {allTags.map((data) => (
             <SplideSlide key={data}>
-              <p className="font-heading font-bold text-sm cursor-pointer hover:underline">
+              <p
+                className="font-heading font-bold text-sm cursor-pointer hover:underline"
+                onClick={() => cl(data)}
+              >
                 {data}
               </p>
             </SplideSlide>

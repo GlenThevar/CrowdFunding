@@ -8,9 +8,17 @@ import interestingFacts from "../data/interestingInfo";
 
 const Home = () => {
   const [campaigns, setCampaigns] = useState([]);
+  const [tagcampaign, setTagCampaign] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loadCount, setLoadCount] = useState(0);
+
+  const { searchingByTags, tagsToSearch } = useContext(AppContext);
+
+  useEffect(() => {
+    console.log(searchingByTags);
+    console.log(tagsToSearch);
+  }, [searchingByTags, tagsToSearch]);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
@@ -28,16 +36,45 @@ const Home = () => {
       }
     };
 
-    fetchCampaigns();
-  }, []);
+    if (!searchingByTags) {
+      fetchCampaigns();
+    }
+  }, [searchingByTags]);
 
   useEffect(() => {
-    if (!isLoading) {
-      setTimeout(() => {
-        if (loadCount == 49) setLoadCount(0);
-        else setLoadCount((prev) => prev + 1);
+    if (searchingByTags && tagsToSearch.trim()) {
+      const fetchCampaigns = async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/campaigns/tag/${tagsToSearch}`
+          );
+          console.log(response);
+          setTagCampaign(response.data);
+        } catch (err) {
+          console.error("Error fetching campaigns:", err);
+          setError("Failed to load campaigns.");
+          toast.error("Failed to load campaigns.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchCampaigns();
+    } else {
+      setTagCampaign([]);
+    }
+  }, [searchingByTags, tagsToSearch]);
+
+  useEffect(() => {
+    let intervalId;
+    if (isLoading) {
+      intervalId = setInterval(() => {
+        setLoadCount((prev) => (prev >= 49 ? 0 : prev + 1));
       }, 5000);
     }
+    return () => clearInterval(intervalId);
   }, [isLoading]);
 
   if (isLoading) {
@@ -58,19 +95,7 @@ const Home = () => {
         <span className="loading loading-ring loading-lg"></span>
         <div>
           <p className="font-heading text-xs ">
-            Error Occoured, Try refreshing ?{" "}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (campaigns.length === 0) {
-    return (
-      <div className="flex flex-col gap-2 justify-center items-center">
-        <div>
-          <p className="font-heading text-xs ">
-            why not be the first one to create a campaign ?
+            Error Occurred, Try refreshing?
           </p>
         </div>
       </div>
@@ -83,11 +108,29 @@ const Home = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center align-items-center">
         {" "}
-        {campaigns.map((campaign) => (
-          <div key={campaign._id}>
-            <CampaignComponent campaign={campaign} />
+        {searchingByTags ? (
+          tagcampaign.length > 0 ? (
+            tagcampaign.map((campaign) => (
+              <div key={campaign._id}>
+                <CampaignComponent campaign={campaign} />
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center font-heading text-xs">
+              <p>No campaigns found for these tags.</p>
+            </div>
+          )
+        ) : campaigns.length > 0 ? (
+          campaigns.map((campaign) => (
+            <div key={campaign._id}>
+              <CampaignComponent campaign={campaign} />
+            </div>
+          ))
+        ) : (
+          <div className="col-span-full text-center font-heading text-xs">
+            <p>Why not be the first one to create a campaign?</p>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
