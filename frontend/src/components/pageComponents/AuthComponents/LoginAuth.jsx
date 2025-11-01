@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 import { Google } from "../../../data/icons/google";
-import SpotlightCard from "../../reactBits/SpotLight/SpotLightCard";
+import SpotlightCard from "../../reactBits/SpotLight/SpotlightCard";
 
 const LoginAuth = () => {
   const [loading, setLoading] = useState(false);
