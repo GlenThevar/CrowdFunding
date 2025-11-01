@@ -6,7 +6,7 @@ import { passwordStrength } from "check-password-strength";
 import isEmail from "validator/lib/isEmail";
 import toast, { Toaster } from "react-hot-toast";
 
-import SpotlightCard from "../../reactBits/SpotLight/SpotLightCard";
+import SpotlightCard from "../../reactBits/SpotLight/SpotlightCard";
 
 const SignupAuth = () => {
   const [username, setUsername] = useState("");
