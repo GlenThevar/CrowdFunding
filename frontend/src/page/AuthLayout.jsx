@@ -17,13 +17,15 @@ const AuthLayout = () => {
       }, 1000);
 
       const checkToken = async () => {
+        const baseurl =
+          import.meta.env.MODE === "development"
+            ? "http://localhost:3000/auth/verifytoken"
+            : "/auth/verifytoken";
+
         try {
-          const result = await axios.post(
-            "http://localhost:3000/auth/verifytoken",
-            {
-              token,
-            }
-          );
+          const result = await axios.post(baseurl, {
+            token,
+          });
 
           if (result.status == 200) {
             setTimeout(() => {
@@ -41,10 +43,11 @@ const AuthLayout = () => {
     }
   }, []);
   return (
-    <div className="h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden relative" data-theme="black">
       <Toaster />
       <NavbarAuth />
-      <div>
+
+      <div className="relative z-10">
         <dialog id="autologin_modal" className="modal">
           <div className="modal-box bg-base-300 flex flex-col items-center w-fit">
             <span className="loading loading-ring loading-xl"></span>

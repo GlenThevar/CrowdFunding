@@ -37,6 +37,13 @@ const UserPage = () => {
   const [campaignToDelete, setCampaignToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  const [updateTitle, SetUpdateTitle] = useState("");
+  const [updateDiscription, SetUpdateDiscription] = useState("");
+
+  const [updateTitleError, setUpdateTitleError] = useState(false);
+  const [updateDiscriptionError, setUpdateDiscriptionError] = useState(false);
+  const [updateId, setUpdateId] = useState("");
+
   useEffect(() => {
     const fetchUserDataAndCampaigns = async () => {
       setPageLoading(true);
@@ -51,10 +58,13 @@ const UserPage = () => {
         return;
       }
 
+      const baseurl_1 =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/campaigns/user/${paramid}`
+          : `/campaigns/user/${paramid}`;
+
       try {
-        const campaignsRes = await axios.get(
-          `http://localhost:3000/campaigns/user/${paramid}`
-        );
+        const campaignsRes = await axios.get(baseurl_1);
 
         if (
           campaignsRes.data &&
@@ -65,16 +75,21 @@ const UserPage = () => {
           if (campaignsRes.data[0]?.userid) {
             setProfileData(campaignsRes.data[0].userid);
           } else {
-            const userRes = await axios.get(
-              `http://localhost:3000/user/${paramid}`
-            );
+            const baseurl_2 =
+              import.meta.env.MODE === "development"
+                ? `http://localhost:3000/user/${paramid}`
+                : `/user/${paramid}`;
+
+            const userRes = await axios.get(baseurl_2);
             setProfileData(userRes.data);
           }
         } else {
           setUserCampaigns([]);
-          const userRes = await axios.get(
-            `http://localhost:3000/user/${paramid}`
-          );
+          const baseurl_3 =
+            import.meta.env.MODE === "development"
+              ? `http://localhost:3000/user/${paramid}`
+              : `/user/${paramid}`;
+          const userRes = await axios.get(baseurl_3);
           if (userRes.data) {
             setProfileData(userRes.data);
           } else {
@@ -161,6 +176,57 @@ const UserPage = () => {
     setLocationIncorrect(location.trim().length === 0 || location.length > 15);
   };
 
+  const onBlurUpdateTitle = () => {
+    setUpdateTitleError(updateTitle.trim() == 0 ? true : false);
+  };
+  const onBlurUpdateDiscription = () => {
+    setUpdateDiscriptionError(updateDiscription.trim() == 0 ? true : false);
+  };
+
+  const createUpdate = async () => {
+    if (updateTitle.trim() == 0 || updateDiscription.trim() == 0) {
+      toast.error("Fields cannot be empty");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Authentication required. Please log in.");
+      return;
+    }
+
+    const baseurl_4 =
+      import.meta.env.MODE === "development"
+        ? `http://localhost:3000/campaigns/update/${updateId}`
+        : `/campaigns/update/${updateId}`;
+
+    try {
+      const data = axios.post(
+        baseurl_4,
+        {
+          title: updateTitle,
+          discription: updateDiscription,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data) {
+        toast.success("Update Created Successfully");
+      }
+    } catch (error) {
+      console.log("Error Occoured" + error);
+      toast.error("Internal Server Error");
+    } finally {
+      document.getElementById("update_modal").close();
+      setUpdateDiscriptionError("");
+      SetUpdateTitle("");
+    }
+  };
+
   const editProfile = async () => {
     onBlurUsername();
     onBlurShort();
@@ -201,17 +267,18 @@ const UserPage = () => {
     formData.append("longDiscription", longDiscription);
     formData.append("basedLocation", location);
 
+    const baseurl_5 =
+      import.meta.env.MODE === "development"
+        ? `http://localhost:3000/user/update/${paramid}`
+        : `/user/update/${paramid}`;
+
     try {
-      const result = await axios.post(
-        `http://localhost:3000/user/update/${paramid}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const result = await axios.post(baseurl_5, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (result.data) {
         toast.success("Profile updated successfully!");
@@ -243,14 +310,16 @@ const UserPage = () => {
     setIsDeleting(true);
 
     try {
-      const response = await axios.delete(
-        `http://localhost:3000/campaigns/${campaignToDelete}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const baseurl_6 =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/campaigns/${campaignToDelete}`
+          : `/campaigns/${campaignToDelete}`;
+
+      const response = await axios.delete(baseurl_6, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.status === 200) {
         toast.success("Campaign deleted successfully!");
@@ -360,11 +429,11 @@ const UserPage = () => {
               </div>
             </div>
 
-            <div className="flex gap-2 w-full justify-center lg:w-fit lg:justify-end flex-shrink-0">
+            <div className="flex gap-2 w-full h-full lg:w-fit lg:justify-end flex-shrink-0">
               {" "}
               {userId == paramid ? (
                 <button
-                  className={`btn btn-outline btn-primary rounded-sm ${
+                  className={`btn btn-outline btn-primary rounded-sm w-full lg:w-fit ${
                     theme == "black"
                       ? "text-white hover:text-black hover:bg-white"
                       : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
@@ -580,7 +649,21 @@ const UserPage = () => {
                   <CampaignComponent campaign={campaign} />
                   {userId == paramid && (
                     <div className="flex gap-2 mt-3 justify-center">
-                      {" "}
+                      <button
+                        className={`btn btn-outline btn-primary rounded-sm ${
+                          theme == "black"
+                            ? "text-white hover:text-black hover:bg-white"
+                            : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
+                        } shadow-sm flex items-center justify-center`}
+                        onClick={() => {
+                          document.getElementById("update_modal").showModal();
+                          setUpdateId(campaign._id);
+                        }}
+                      >
+                        <p className="font-heading text-xs sm:text-sm font-light">
+                          Update
+                        </p>
+                      </button>
                       <Link
                         to={`/edit/${campaign._id}`}
                         className={`btn btn-outline btn-primary rounded-sm ${
@@ -681,6 +764,117 @@ const UserPage = () => {
           </div>
           <form method="dialog" className="modal-backdrop">
             <button onClick={() => setCampaignToDelete(null)}>close</button>
+          </form>
+        </dialog>
+        <dialog id="update_modal" className="modal">
+          <div
+            className={`modal-box ${
+              theme == "black" ? "bg-base-300" : "bg-base-200"
+            }`}
+          >
+            <form method="dialog">
+              <button
+                className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onClick={() => {
+                  setUpdateDiscriptionError(false);
+                  setUpdateTitleError(false);
+                  setUpdateId("");
+                  SetUpdateDiscription("");
+                  SetUpdateTitle("");
+                }}
+              >
+                ✕
+              </button>
+            </form>
+            <h3 className="font-bold text-lg">Update Campaign</h3>{" "}
+            <div className="flex flex-col mt-4 gap-3">
+              <div className="flex flex-col gap-1">
+                <p className="font-heading text-md">Title</p>
+                <input
+                  type="text"
+                  className={`focus:outline-0  
+         [&::-webkit-search-cancel-button]:appearance-none 
+         [&::-webkit-search-decoration]:appearance-none 
+         [&::-webkit-search-results-button]:appearance-none 
+         [&::-webkit-search-results-decoration]:appearance-none bg-base-200 p-3 font-subheading text-sm ${
+           theme == "black" ? "bg-base-200" : "bg-base-300"
+         } ${updateTitleError ? "border-1 border-red-600" : ""}`}
+                  placeholder="Enter title..."
+                  onChange={(e) => {
+                    SetUpdateTitle(e.target.value);
+                  }}
+                  value={updateTitle}
+                  onBlur={onBlurUpdateTitle}
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="font-heading text-md">Discription</p>
+                <textarea
+                  type="text"
+                  className={`focus:outline-0  
+         [&::-webkit-search-cancel-button]:appearance-none 
+         [&::-webkit-search-decoration]:appearance-none 
+         [&::-webkit-search-results-button]:appearance-none 
+         [&::-webkit-search-results-decoration]:appearance-none font-subheading bg-base-200 p-3 h-40 resize-none text-sm rounded-sm ${
+           theme == "black" ? "bg-base-200" : "bg-base-300"
+         }  ${updateDiscriptionError ? "border-1 border-red-600" : ""}`}
+                  placeholder="Enter discription..."
+                  onChange={(e) => {
+                    SetUpdateDiscription(e.target.value);
+                  }}
+                  value={updateDiscription}
+                  onBlur={onBlurUpdateDiscription}
+                />
+              </div>
+              <div className="flex gap-2 justify-end">
+                <button
+                  className={`btn btn-outline btn-primary rounded-sm ${
+                    theme == "black"
+                      ? "text-white hover:text-black hover:bg-white"
+                      : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
+                  } shadow-sm flex items-center justify-center`}
+                  onClick={() => {
+                    document.getElementById("update_modal").close();
+                    setUpdateDiscriptionError(false);
+                    setUpdateTitleError(false);
+                    setUpdateId("");
+                    SetUpdateDiscription("");
+                    SetUpdateTitle("");
+                  }}
+                >
+                  <p className="font-heading text-xs sm:text-sm font-light">
+                    Cancel
+                  </p>
+                </button>
+                <button
+                  className={`btn btn-outline btn-primary rounded-sm ${
+                    theme == "black"
+                      ? "text-white hover:text-black hover:bg-white"
+                      : "text-black  bg-base-100 border-base-300 hover:bg-green-900 hover:text-white"
+                  } shadow-sm flex items-center justify-center`}
+                  onClick={() => {
+                    createUpdate();
+                  }}
+                >
+                  <p className="font-heading text-xs sm:text-sm font-light">
+                    Create
+                  </p>
+                </button>
+              </div>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button
+              onClick={() => {
+                setUpdateDiscriptionError(false);
+                setUpdateTitleError(false);
+                setUpdateId("");
+                SetUpdateDiscription("");
+                SetUpdateTitle("");
+              }}
+            >
+              close
+            </button>
           </form>
         </dialog>
       </div>

@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
 import { Google } from "../../../data/icons/google";
+import SpotlightCard from "../../reactBits/SpotLight/SpotLightCard";
 
 const LoginAuth = () => {
   const [loading, setLoading] = useState(false);
@@ -41,9 +42,14 @@ const LoginAuth = () => {
       toast.error("Hmm... somethings wrong on your end");
     }
 
+    const baseurl =
+      import.meta.env.MODE === "development"
+        ? "http://localhost:3000/auth/login/"
+        : "/auth/login/";
+
     try {
       const response = await axios
-        .post("http://localhost:3000/auth/login/", {
+        .post(baseurl, {
           email,
           password,
         })
@@ -69,82 +75,87 @@ const LoginAuth = () => {
   return (
     <div className="flex w-full h-[75vh] justify-center items-center">
       <Toaster />
-
-      <div className="w-[300px] sm:w-[400px] md:w-[500px] h-fit bg-base-200 border-2 border-base-300 flex flex-col p-5 gap-6 ">
-        <div className="flex flex-col w-full items-center gap-4">
-          <div className="w-full flex justify-center">
-            <Origami strokeWidth={0.5} className="w-15 h-15" />
+      <SpotlightCard
+        className="h-fit w-fit mt-10"
+        spotlightColor="rgba(159, 159, 159, 0.2)"
+      >
+        <div className="w-[300px] sm:w-[400px] md:w-[500px] h-fit flex flex-col gap-6 ">
+          <div className="flex flex-col w-full items-center gap-4">
+            <div className="w-full flex justify-center">
+              <Origami strokeWidth={0.5} className="w-15 h-15" />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <p className="font-heading font-semibold text-2xl">
+                Welcome Back
+              </p>
+              <p className="font-heading font-light text-xs">
+                Dont have an account yet ?{" "}
+                <Link to="/auth/signup">
+                  <span className="font-semibold hover:border-b-1 cursor-pointer">
+                    Sign Up
+                  </span>
+                </Link>
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col items-center gap-1">
-            <p className="font-heading font-semibold text-2xl">Welcome Back</p>
-            <p className="font-heading font-light text-xs">
-              Dont have an account yet ?{" "}
-              <Link to="/auth/signup">
-                <span className="font-semibold hover:border-b-1 cursor-pointer">
-                  Sign Up
-                </span>
-              </Link>
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col items-center w-full gap-4">
-          <div
-            className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full ${
-              emailDeselected
-                ? isEmail(email)
-                  ? ""
-                  : "border-1 border-error"
-                : ""
-            }`}
-          >
-            <Mail strokeWidth={1} />
-            <input
-              type="email"
-              placeholder="email adress"
-              className="w-full focus:outline-0  
-         [&::-webkit-search-cancel-button]:appearance-none 
-         [&::-webkit-search-decoration]:appearance-none 
-         [&::-webkit-search-results-button]:appearance-none 
-         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
-              value={email}
-              onChange={emailChange}
-              onBlur={() => setEmailDeselected(true)}
-            />
-          </div>
-          <div className="flex flex-col gap-3 w-full ">
+          <div className="flex flex-col items-center w-full gap-4">
             <div
-              className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full 
-                 `}
+              className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full ${
+                emailDeselected
+                  ? isEmail(email)
+                    ? ""
+                    : "border-1 border-error"
+                  : ""
+              }`}
             >
-              <Lock strokeWidth={1} />
-
+              <Mail strokeWidth={1} />
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="password"
+                type="email"
+                placeholder="email adress"
                 className="w-full focus:outline-0  
          [&::-webkit-search-cancel-button]:appearance-none 
          [&::-webkit-search-decoration]:appearance-none 
          [&::-webkit-search-results-button]:appearance-none 
-         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm "
-                value={password}
-                onChange={passwordChange}
+         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm"
+                value={email}
+                onChange={emailChange}
+                onBlur={() => setEmailDeselected(true)}
               />
-              {showPassword ? (
-                <EyeOff strokeWidth={1} onClick={toggleShowPassword} />
-              ) : (
-                <Eye strokeWidth={1} onClick={toggleShowPassword} />
-              )}
             </div>
-          </div>
+            <div className="flex flex-col gap-3 w-full ">
+              <div
+                className={`flex bg-base-300 items-center rounded-md p-3 gap-3 w-full 
+                 `}
+              >
+                <Lock strokeWidth={1} />
 
-          <button
-            className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
-            onClick={submitForm}
-          >
-            {loading ? <p>LOGGING</p> : <p>LOG IN</p>}
-          </button>
-        </div>
-        {/* <div className="flex w-full">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="password"
+                  className="w-full focus:outline-0  
+         [&::-webkit-search-cancel-button]:appearance-none 
+         [&::-webkit-search-decoration]:appearance-none 
+         [&::-webkit-search-results-button]:appearance-none 
+         [&::-webkit-search-results-decoration]:appearance-none bg-base-300  font-subheading text-sm rounded-sm "
+                  value={password}
+                  onChange={passwordChange}
+                />
+                {showPassword ? (
+                  <EyeOff strokeWidth={1} onClick={toggleShowPassword} />
+                ) : (
+                  <Eye strokeWidth={1} onClick={toggleShowPassword} />
+                )}
+              </div>
+            </div>
+
+            <button
+              className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light text-xs w-full"
+              onClick={submitForm}
+            >
+              {loading ? <p>LOGGING</p> : <p>LOG IN</p>}
+            </button>
+          </div>
+          {/* <div className="flex w-full">
           <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
           <div className="font-heading text-xs mx-2">OR</div>
           <div className="border-t-[1px] border-gray-500 h-0 mt-[7px] flex-1"></div>
@@ -157,7 +168,8 @@ const LoginAuth = () => {
             <Google className="w-5 h-5" />
           </button>
         </div> */}
-      </div>
+        </div>
+      </SpotlightCard>
     </div>
   );
 };

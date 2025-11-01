@@ -9,6 +9,14 @@ import { users } from "../models/user.js";
 export const registerController = async (req, res) => {
   try {
     const { username, email, password, lastLogin, accountCreated } = req.body;
+
+    const totalUsers = await users.find();
+
+    if (totalUsers.length > 5)
+      return res.status(406).json({
+        message: "Cannot have more than 5 users, since its still in testing",
+      });
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new users({
       username,
@@ -37,17 +45,17 @@ export const registerController = async (req, res) => {
       subject: "Verify your Fund It account",
       text: `Hey there!
 
-Thanks for joining Fund It — we’re excited to have you onboard.
+    Thanks for joining Fund It — we’re excited to have you onboard.
 
-Please verify your email to activate your account: 
+    Please verify your email to activate your account:
 
-http://localhost:5175/auth/verify?token=${emailToken}
+    http://localhost:5175/auth/verify?token=${emailToken}
 
-If you didn’t sign up for Fund It, you can safely ignore this message.
+    If you didn’t sign up for Fund It, you can safely ignore this message.
 
-Cheers,
-The Fund It Team
-`,
+    Cheers,
+    The Fund It Team
+    `,
     };
 
     transport.sendMail(mailOptions, (err, info) => {

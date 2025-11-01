@@ -116,7 +116,7 @@ const NavbarHome = () => {
               }`}
             >
               <li>
-                <Link to={`/user/${userId}`}>
+                <Link to={`/profile/${userId}`}>
                   <div className="flex justify-start gap-2 items-center rounded-lg">
                     <User />
                     <p className="font-heading">Profile</p>

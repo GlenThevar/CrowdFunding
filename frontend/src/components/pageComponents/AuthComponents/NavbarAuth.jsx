@@ -2,7 +2,7 @@ import React from "react";
 import { Origami, Send, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import ButtonAuth from "../HomeComponents/ButtonAuth";
+import ShinyText from "../../reactBits/ShinyText/ShinyText";
 
 const NavbarAuth = () => {
   return (
@@ -20,7 +20,7 @@ const NavbarAuth = () => {
         <div className="flex items-center gap-2 md:gap-3">
           <Link to="/auth/signup">
             <button className="btn btn-outline btn-primary font-heading bg-base-300  text-white rounded-md hover:text-black hover:bg-white font-light px-2 py-3 sm:px-3 sm:py-4  md:px-4 md:py-5 text-xs">
-              <p>SIGN UP</p>{" "}
+              <p>SIGN UP</p>
               <Plus strokeWidth={0.75} className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
           </Link>

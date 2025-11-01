@@ -27,7 +27,7 @@ const SearchNav = () => {
          [&::-webkit-search-cancel-button]:appearance-none 
          [&::-webkit-search-decoration]:appearance-none 
          [&::-webkit-search-results-button]:appearance-none 
-         [&::-webkit-search-results-decoration]:appearance-none w-full md:w-[40vw] lg:w-[50vw]"
+         [&::-webkit-search-results-decoration]:appearance-none w-full md:w-[40vw] lg:w-[50vw] font-subheading"
           placeholder="Search for a specific campaign..."
           value={search}
           onChange={HandleInput}

@@ -24,8 +24,14 @@ const Home = () => {
     const fetchCampaigns = async () => {
       setIsLoading(true);
       setError(null);
+
+      const baseurl =
+        import.meta.env.MODE === "development"
+          ? "http://localhost:3000/campaigns/"
+          : "/campaigns";
+
       try {
-        const response = await axios.get("http://localhost:3000/campaigns/");
+        const response = await axios.get(baseurl);
         setCampaigns(response.data);
       } catch (err) {
         console.error("Error fetching campaigns:", err);
@@ -46,10 +52,14 @@ const Home = () => {
       const fetchCampaigns = async () => {
         setIsLoading(true);
         setError(null);
+
+        const baseurl =
+          import.meta.env.MODE === "development"
+            ? `http://localhost:3000/campaigns/tag/${tagsToSearch}`
+            : `/campaigns/tag/${tagsToSearch}`;
+
         try {
-          const response = await axios.get(
-            `http://localhost:3000/campaigns/tag/${tagsToSearch}`
-          );
+          const response = await axios.get(baseurl);
           console.log(response);
           setTagCampaign(response.data);
         } catch (err) {

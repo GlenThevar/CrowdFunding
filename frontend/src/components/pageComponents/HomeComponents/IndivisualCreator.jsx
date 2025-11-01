@@ -49,7 +49,7 @@ const IndivisualCreator = ({ campaign }) => {
         About the creator
       </div>
       <div className="flex items-center gap-4">
-        <Link to={`/user/${creator._id}`}>
+        <Link to={`/profile/${creator._id}`}>
           <div
             className={`rounded-full ${
               theme == "black"

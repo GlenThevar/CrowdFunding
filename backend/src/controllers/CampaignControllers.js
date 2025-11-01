@@ -45,6 +45,53 @@ export async function createCampaign(req, res) {
   }
 }
 
+export async function createUpdate(req, res) {
+  const { title, discription } = req.body;
+  const userId = req.user.id;
+  const campaignId = req.params.id;
+
+  if (!title || !discription) {
+    return res
+      .status(400)
+      .json({ message: "Title and description are required." });
+  }
+
+  if (!userId) {
+    return res.status(401).json({ message: "User not authenticated." });
+  }
+
+  try {
+    const campaign = await campaigns.findById(campaignId);
+
+    if (!campaign) {
+      return res.status(404).json({ message: "Campaign not found." });
+    }
+
+    if (campaign.userid.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "You are not the creator of this campaign." });
+    }
+
+    const newUpdate = {
+      Title: title,
+      Discription: discription,
+    };
+
+    campaign.Updates.push(newUpdate);
+
+    const updatedCampaign = await campaign.save();
+
+    res.status(201).json(updatedCampaign);
+  } catch (err) {
+    if (err.name === "ValidationError") {
+      return res.status(400).json({ message: err.message });
+    }
+    console.error("Error creating the update:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
 export async function AllCampaign(req, res) {
   try {
     const allCampaigns = await campaigns

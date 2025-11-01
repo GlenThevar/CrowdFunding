@@ -60,6 +60,27 @@ const CampaignSchema = new mongoose.Schema(
       },
     ],
 
+    Updates: [
+      {
+        Title: {
+          type: String,
+          required: true,
+        },
+        Discription: {
+          type: String,
+          required: true,
+        },
+        Likes: {
+          type: Number,
+          default: 0,
+        },
+        CreatedAt: {
+          type: Date,
+          default: Date.now(),
+        },
+      },
+    ],
+
     tags: {
       type: [String],
       validate: [validateTagLimit, "A maximum of 2 tags are allowed."],

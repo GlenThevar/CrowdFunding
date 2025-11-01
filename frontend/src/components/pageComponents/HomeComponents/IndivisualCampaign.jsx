@@ -61,10 +61,14 @@ const ViewCampaign = () => {
     const fetchCampaign = async () => {
       setIsLoading(true);
       setError(null);
+
+      const baseurl =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/campaigns/${id}`
+          : `/campaigns/${id}`;
+
       try {
-        const response = await axios.get(
-          `http://localhost:3000/campaigns/${id}`
-        );
+        const response = await axios.get(baseurl);
         setCampaign(response.data);
       } catch (err) {
         console.error("Error fetching campaign:", err);
@@ -137,9 +141,9 @@ const ViewCampaign = () => {
     <div className="flex flex-col gap-2">
       <Toaster />
       <div
-        className={`flex flex-col md:flex-row md:gap-5 lg:gap-10 border-base-300 ${
+        className={`flex flex-col gap-3 md:flex-row md:gap-5 lg:gap-10 border-base-300 ${
           theme == "black" ? "border-2" : "border-1"
-        } p-5 mx-10 shadow-lg`}
+        } p-5 shadow-lg`}
       >
         <div className="flex-1 flex flex-col gap-2">
           <div
@@ -268,7 +272,7 @@ const ViewCampaign = () => {
             theme == "black"
               ? "border-x-2 border-t-2 border-base-300"
               : "border-x-1 border-t-1 border-base-300"
-          } mx-10 h-10 font-heading font-semibold text-xs sm:text-sm shadow-sm`}
+          } h-10 font-heading font-semibold text-xs sm:text-sm shadow-sm`}
         >
           <div className="hover:border-b-1">
             <p
@@ -322,7 +326,7 @@ const ViewCampaign = () => {
           </div>
         </div>
         <div
-          className={`mx-10 ${
+          className={`${
             theme == "black"
               ? "border-2 border-base-300"
               : "border-1 border-base-300"
@@ -330,7 +334,12 @@ const ViewCampaign = () => {
         >
           {option == 1 && <IndivisualDetails campaign={campaign} />}
           {option == 2 && <IndivisualFAQ campaign={campaign} />}
-          {option == 3 && <IndividualUpdates campaign={campaign} />}
+          {option == 3 && (
+            <IndividualUpdates
+              campaign={campaign}
+              isUser={campaign?.userid._id == userId}
+            />
+          )}
           {option == 4 && <IndivisualCreator campaign={campaign} />}
           {option == 5 && <IndivisualComments campaign={campaign} />}
         </div>

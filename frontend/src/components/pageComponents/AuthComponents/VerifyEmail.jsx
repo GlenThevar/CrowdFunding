@@ -7,12 +7,14 @@ const VerifyEmail = () => {
   const [searchParam] = useSearchParams();
 
   const emailVerification = async () => {
+    const baseurl =
+      import.meta.env.MODE === "development"
+        ? `http://localhost:3000/auth/verifyemail?token=${searchParam.get(
+            "token"
+          )}`
+        : `/auth/verifyemail?token=${searchParam.get("token")}`;
     try {
-      const result = await axios.post(
-        `http://localhost:3000/auth/verifyemail?token=${searchParam.get(
-          "token"
-        )}`
-      );
+      const result = await axios.post(baseurl);
       if (result.status == 200) {
         toast.success("Verification successfull");
       }

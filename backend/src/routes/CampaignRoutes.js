@@ -14,6 +14,7 @@ import {
   UpdateCampaign,
   UserCampaigns,
   TagsCampaigns,
+  createUpdate,
 } from "../controllers/CampaignControllers.js";
 
 cloudinary.config({
@@ -68,4 +69,10 @@ router.delete(
   "/:id",
   passport.authenticate(["jwt"], { session: false }),
   DeleteCampaign
+);
+
+router.post(
+  "/update/:id",
+  passport.authenticate(["jwt"], { session: false }),
+  createUpdate
 );

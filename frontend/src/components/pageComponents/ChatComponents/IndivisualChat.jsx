@@ -39,15 +39,18 @@ const IndivisualChat = () => {
         toast.error("Authentication token not found");
         return;
       }
+
+      const baseurl_1 =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/chat/list/${userId}`
+          : `/chat/list/${userId}`;
+
       try {
-        const chatListRes = await axios.get(
-          `http://localhost:3000/chat/list/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const chatListRes = await axios.get(baseurl_1, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const chat = chatListRes.data.data.find((c) =>
           c.participants.some((p) => p._id === receiverId)
         );
@@ -55,19 +58,25 @@ const IndivisualChat = () => {
         if (chat) {
           setChatId(chat._id);
 
-          const msgRes = await axios.get(
-            `http://localhost:3000/chat/messages/${chat._id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const baseurl_2 =
+            import.meta.env.MODE === "development"
+              ? `http://localhost:3000/chat/messages/${chat._id}`
+              : `/chat/messages/${chat._id}`;
+
+          const msgRes = await axios.get(baseurl_2, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setMessages(msgRes.data.data || []);
 
+          const baseurl_3 =
+            import.meta.env.MODE === "development"
+              ? `http://localhost:3000/chat/messages/seen/${chat._id}`
+              : `/chat/messages/seen/${chat._id}`;
           try {
             await axios.patch(
-              `http://localhost:3000/chat/messages/seen/${chat._id}`,
+              baseurl_3,
               {},
               {
                 headers: {
@@ -116,15 +125,16 @@ const IndivisualChat = () => {
     }
 
     try {
-      const res = await axios.post(
-        `http://localhost:3000/chat/send/${receiverId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const baseurl =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/chat/send/${receiverId}`
+          : `/chat/send/${receiverId}`;
+
+      const res = await axios.post(baseurl, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const newPopulatedMessage = res.data.data.lastMessage;
       setMessages((prev) => [...prev, newPopulatedMessage]);

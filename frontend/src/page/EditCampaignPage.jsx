@@ -52,10 +52,14 @@ const EditCampaignPage = () => {
     const fetchCampaignData = async () => {
       setIsPageLoading(true);
       setPageError(null);
+
+      const baseurl =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/campaigns/${campaignId}`
+          : `/campaigns/${campaignId}`;
+
       try {
-        const response = await axios.get(
-          `http://localhost:3000/campaigns/${campaignId}`
-        );
+        const response = await axios.get(baseurl);
         const campaignData = response.data;
 
         if (campaignData) {
@@ -260,17 +264,18 @@ const EditCampaignPage = () => {
       });
     }
 
+    const baseurl =
+      import.meta.env.MODE === "development"
+        ? `http://localhost:3000/campaigns/${campaignId}`
+        : `/campaigns/${campaignId}`;
+
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/campaigns/${campaignId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.patch(baseurl, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       toast.success("Campaign updated successfully!");
       navigate(`/user/${userId}`);

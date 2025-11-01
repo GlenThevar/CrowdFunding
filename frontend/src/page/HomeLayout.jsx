@@ -16,13 +16,14 @@ const HomeLayout = () => {
   useEffect(() => {
     if (token) {
       const checkToken = async () => {
+        const baseurl =
+          import.meta.env.MODE === "development"
+            ? "http://localhost:3000/auth/verifytoken"
+            : "/auth/verifytoken";
         try {
-          const result = await axios.post(
-            "http://localhost:3000/auth/verifytoken",
-            {
-              token,
-            }
-          );
+          const result = await axios.post(baseurl, {
+            token,
+          });
           setUserId(result.data.data.id);
 
           if (result.status == 200) {

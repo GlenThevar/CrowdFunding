@@ -30,7 +30,7 @@ const App = () => {
             <Route path="edit/:id" element={<EditCampaignPage />} />
             <Route path="chat" element={<Chat />} />
             <Route path="chat/:id" element={<Chat />} />
-            <Route path="user/:id" element={<UserPage />} />
+            <Route path="profile/:id" element={<UserPage />} />
           </Route>
           <Route path="/auth" element={<AuthLayout />}>
             <Route index element={<HomeAuth />} />

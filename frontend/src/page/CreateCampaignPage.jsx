@@ -37,6 +37,16 @@ const CreateCampaignPage = () => {
   const urlChange = (e) => setUrl(e.target.value);
   const fundsChange = (e) => setFunds(e.target.value);
 
+  const module = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, false] }],
+        ["bold", "italic", "underline"],
+        ["link"],
+      ],
+    },
+  };
+
   const faqChange = (id, type, val) => {
     setFaq((prevfaq) =>
       prevfaq.map((f) => (f.id === id ? { ...f, [type]: val } : f))
@@ -199,17 +209,18 @@ const CreateCampaignPage = () => {
       formData.append("images", file);
     });
 
+    const baseurl =
+      import.meta.env.MODE === "development"
+        ? "http://localhost:3000/campaigns/"
+        : "/campaigns/";
+
     try {
-      const response = await axios.post(
-        "http://localhost:3000/campaigns/",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(baseurl, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const savedCampaign = response.data;
       toast.success("Campaign created successfully!");
@@ -575,6 +586,8 @@ const CreateCampaignPage = () => {
             onTextChange={(e) => setText(e.htmlValue)}
             onBlur={validateEditor}
             className="h-50"
+            modules={module}
+            showHeader={false}
           />
         </div>
 

@@ -23,15 +23,18 @@ const ChatList = () => {
         setLoading(false);
         return;
       }
+
+      const baseurl =
+        import.meta.env.MODE === "development"
+          ? `http://localhost:3000/chat/list/${userId}`
+          : `/chat/list/${userId}`;
+
       try {
-        const res = await axios.get(
-          `http://localhost:3000/chat/list/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await axios.get(baseurl, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setChatList(res.data.data || []);
       } catch (err) {
         console.error("Error fetching chat list:", err);
