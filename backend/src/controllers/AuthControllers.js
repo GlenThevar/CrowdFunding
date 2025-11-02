@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
 import nodemailer from "nodemailer";
-import Cookies from "js-cookie";
 
 import { users } from "../models/user.js";
 
@@ -10,7 +8,7 @@ export const registerController = async (req, res) => {
   try {
     const { username, email, password, lastLogin, accountCreated } = req.body;
 
-    const totalUsers = await users.find();
+    const totalUsers = await users.find({ isVerified: true });
 
     if (totalUsers.length > 5)
       return res.status(406).json({
@@ -27,16 +25,18 @@ export const registerController = async (req, res) => {
     });
     const savedUser = await user.save();
 
+    const emailToken = jwt.sign({ email: email }, process.env.jwt_secret_key, {
+      expiresIn: "1d",
+    });
+
     const transport = nodemailer.createTransport({
       service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
       auth: {
         user: process.env.user_email,
         pass: process.env.user_pass,
       },
-    });
-
-    const emailToken = jwt.sign({ email: email }, process.env.jwt_secret_key, {
-      expiresIn: "1d",
     });
 
     const mailOptions = {
@@ -49,7 +49,7 @@ export const registerController = async (req, res) => {
 
     Please verify your email to activate your account:
 
-    http://localhost:5175/auth/verify?token=${emailToken}
+    https://crowdfunding-2wma.onrender.com/auth/verify?token=${emailToken}
 
     If you didn’t sign up for Fund It, you can safely ignore this message.
 
