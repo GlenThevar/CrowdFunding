@@ -45,7 +45,7 @@ const LoginAuth = () => {
     const baseurl =
       import.meta.env.MODE === "development"
         ? "http://localhost:3000/auth/login/"
-        : "/auth/login/";
+        : "/auth/login";
 
     try {
       const response = await axios
